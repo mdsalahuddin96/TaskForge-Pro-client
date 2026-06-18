@@ -8,35 +8,45 @@ import {
   Form,
   Input,
   Label,
-  Spinner,
   TextField,
 } from "@heroui/react";
 import { FiBriefcase, FiUser, FiCheckCircle } from "react-icons/fi";
 import { FcGoogle } from "react-icons/fc";
 import { FormSubmitBtn } from "@/components/main/FormSubmitBtn";
+import { authClient } from "@/lib/auth-client";
+import toast from "react-hot-toast";
 
 export default function RegisterPage() {
-  const [isPending, setIsPending] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
   const [selectedRole, setSelectedRole] = useState("Client");
 
   const toggleVisibility = () => setIsVisible(!isVisible);
 
   const handleFormSubmit = async (formData) => {
-    // e.preventDefault();
-    // setIsPending(true);
     try {
-    //   const formData = new FormData(e.currentTarget);
-      const data = Object.fromEntries(formData.entries());
-      data.role = selectedRole;
-      data.isBlocked=false;
-      console.log("Registered Data:", data);
-    //   setTimeout(() => {
-    //     setIsPending(false);
-    //   }, 5000);
-      alert(`Account created successfully as a ${selectedRole}!`);
+      const userData = Object.fromEntries(formData.entries());
+      userData.role = selectedRole;
+      userData.isBlocked = false;
+      //  convert skills to Array
+      if (selectedRole === "Freelancer" && userData.skills) {
+        userData.skills = userData.skills
+          .split(",")
+          .map((skill) => skill.trim())
+          .filter((skill) => skill !== "");
+      } else {
+        userData.skills = [];
+      }
+
+      const { data, error } = await authClient.signUp.email(userData);
+      if (data) {
+        console.log(data);
+        toast.success("Registered Successfully!");
+      }
+      if (error) {
+        toast.error(error.message);
+      }
     } catch (error) {
-    //   setIsPending(false);
+      console.log(error);
     }
   };
 
@@ -269,7 +279,7 @@ export default function RegisterPage() {
               `Register as ${selectedRole}`
             )}
           </Button> */}
-          <FormSubmitBtn text="Register" role={selectedRole}/>
+          <FormSubmitBtn text="Register" role={selectedRole} />
         </Form>
       </div>
     </div>
