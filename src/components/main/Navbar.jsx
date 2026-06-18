@@ -5,6 +5,7 @@ import React, { useState } from "react";
 import NavLink from "./NavLinks";
 import { Button, Spinner } from "@heroui/react";
 import { IoLogInOutline } from "react-icons/io5";
+import { FiCpu } from "react-icons/fi";
 const navItems = [
   { href: "/", text: "Home" },
   { href: "/browse-tasks", text: "Browse Tasks" },
@@ -53,17 +54,35 @@ const Navbar = () => {
 
         {/* logo */}
         <Link href={"/"} className="cursor-pointer">
-          <div className="flex gap-2 items-center">
-            {/* <Image
+          {/* <div className="flex gap-2 items-center">
+            <Image
               src={logo}
               alt="logo"
               height={50}
               width={50}
               className="rounded-full hidden md:block"
-            /> */}
+            />
             <h1 className="gradient-text heading-font text-2xl md:text-3xl font-semibold">
               TaskForge Pro
             </h1>
+          </div> */}
+
+          <div className="flex items-center gap-2.5 select-none group cursor-pointer">
+            <div className="relative flex items-center justify-center w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-500 via-purple-500 to-violet-600 p-[1.5px] shadow-md shadow-indigo-500/10 dark:shadow-indigo-950/30 transition-transform duration-300 group-hover:scale-105">
+              <div className="flex items-center justify-center w-full h-full rounded-[10px] bg-white dark:bg-slate-900 transition-colors">
+                <FiCpu className="w-5 h-5 text-indigo-600 dark:text-indigo-400 group-hover:rotate-12 transition-transform duration-300" />
+              </div>
+            </div>
+
+            {/* লোগো টেক্সট (ব্র্যান্ড গ্রেডিয়েন্ট) */}
+            <div className="flex flex-col justify-center">
+              <span className="text-xl font-black tracking-tight bg-gradient-to-r from-indigo-600 via-purple-600 to-violet-500 bg-clip-text text-transparent dark:from-indigo-400 dark:via-purple-400 dark:to-violet-400">
+                TaskForge 
+                <span className="text-slate-800 dark:text-slate-200 font-medium text-lg font-bold ml-0.5">
+                  Pro
+                </span>
+              </span>
+            </div>
           </div>
         </Link>
 
@@ -106,7 +125,7 @@ const Navbar = () => {
             <ul className="flex flex-col gap-2 p-4">
               {navItems.map((item, ind) => (
                 <button
-                  className="text-left max-w-40"
+                  className="text-left inline-block"
                   key={ind}
                   onClick={() => setIsMenuOpen(false)}
                 >
@@ -115,9 +134,10 @@ const Navbar = () => {
               ))}
             </ul>
           </div>
-          <div className="min-h-screen" onClick={()=>setIsMenuOpen(false)}>
-
-          </div>
+          <div
+            className="min-h-screen bg-transparent"
+            onClick={() => setIsMenuOpen(false)}
+          ></div>
         </>
       )}
     </nav>
