@@ -21,7 +21,7 @@ export default function RootLayout({ children }) {
   return (
     <html
       lang="en"
-      className={`${poppins.variable} h-full antialiased`}
+      className={`${poppins.variable} h-full antialiased bg-gradient-to-tr from-slate-50 to-indigo-50`}
     >
       <body className="min-h-full flex flex-col">
         <Navbar/>

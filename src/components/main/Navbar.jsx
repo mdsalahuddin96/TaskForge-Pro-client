@@ -1,4 +1,4 @@
-'use client'
+"use client";
 import Image from "next/image";
 import Link from "next/link";
 import React, { useState } from "react";
@@ -8,16 +8,16 @@ import { IoLogInOutline } from "react-icons/io5";
 const navItems = [
   { href: "/", text: "Home" },
   { href: "/browse-tasks", text: "Browse Tasks" },
-  {href:"/browse-freelancers",text:"Browse Freelancers"}
+  { href: "/browse-freelancers", text: "Browse Freelancers" },
 ];
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-//   const { data, isPending } = useSession();
-//   const user = data?.user;
-const isPending=false;
-const user=false;
+  //   const { data, isPending } = useSession();
+  //   const user = data?.user;
+  const isPending = false;
+  const user = false;
   return (
-    <nav className="sticky top-0 z-40 w-full border-b border-separator py-2 navbar-blur ">
+    <nav className="sticky top-0 z-50 bg-white/70 backdrop-blur-md border-b border-slate-200/50 dark:bg-slate-900/75 dark:border-slate-800/50">
       <header className="flex h-16 items-center justify-between px-6 container mx-auto">
         {/* Hamburger for mobile */}
         <div className="md:hidden flex items-center gap-4">
@@ -101,13 +101,24 @@ const user=false;
       </header>
       {/* Mobile menu */}
       {isMenuOpen && (
-        <div className="border-t border-separator md:hidden">
-          <ul className="flex flex-col gap-2 p-4">
-            {navItems.map((item, ind) => (
-              <button className="text-left max-w-40" key={ind} onClick={()=>setIsMenuOpen(false)}><NavLink item={item}></NavLink></button>
-            ))}
-          </ul>
-        </div>
+        <>
+          <div className="border-t border-separator md:hidden">
+            <ul className="flex flex-col gap-2 p-4">
+              {navItems.map((item, ind) => (
+                <button
+                  className="text-left max-w-40"
+                  key={ind}
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  <NavLink item={item}></NavLink>
+                </button>
+              ))}
+            </ul>
+          </div>
+          <div className="min-h-screen" onClick={()=>setIsMenuOpen(false)}>
+
+          </div>
+        </>
       )}
     </nav>
   );
