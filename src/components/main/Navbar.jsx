@@ -6,6 +6,8 @@ import NavLink from "./NavLinks";
 import { Button, Spinner } from "@heroui/react";
 import { IoLogInOutline } from "react-icons/io5";
 import { FiCpu } from "react-icons/fi";
+import { useSession } from "@/lib/auth-client";
+import { UserDropdown } from "./UserDropdown";
 const navItems = [
   { href: "/", text: "Home" },
   { href: "/browse-tasks", text: "Browse Tasks" },
@@ -13,10 +15,8 @@ const navItems = [
 ];
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  //   const { data, isPending } = useSession();
-  //   const user = data?.user;
-  const isPending = false;
-  const user = false;
+  const { data, isPending } = useSession();
+  const user = data?.user;
   return (
     <nav className="sticky top-0 z-50 bg-white/70 backdrop-blur-md border-b border-slate-200/50 dark:bg-slate-900/75 dark:border-slate-800/50">
       <header className="flex h-16 items-center justify-between px-6 container mx-auto">
@@ -54,19 +54,6 @@ const Navbar = () => {
 
         {/* logo */}
         <Link href={"/"} className="cursor-pointer">
-          {/* <div className="flex gap-2 items-center">
-            <Image
-              src={logo}
-              alt="logo"
-              height={50}
-              width={50}
-              className="rounded-full hidden md:block"
-            />
-            <h1 className="gradient-text heading-font text-2xl md:text-3xl font-semibold">
-              TaskForge Pro
-            </h1>
-          </div> */}
-
           <div className="flex items-center gap-2.5 select-none group cursor-pointer">
             <div className="relative flex items-center justify-center w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-500 via-purple-500 to-violet-600 p-[1.5px] shadow-md shadow-indigo-500/10 dark:shadow-indigo-950/30 transition-transform duration-300 group-hover:scale-105">
               <div className="flex items-center justify-center w-full h-full rounded-[10px] bg-white dark:bg-slate-900 transition-colors">
@@ -74,10 +61,10 @@ const Navbar = () => {
               </div>
             </div>
 
-            {/* লোগো টেক্সট (ব্র্যান্ড গ্রেডিয়েন্ট) */}
+            {/* Logo Text */}
             <div className="flex flex-col justify-center">
               <span className="text-xl font-black tracking-tight bg-gradient-to-r from-indigo-600 via-purple-600 to-violet-500 bg-clip-text text-transparent dark:from-indigo-400 dark:via-purple-400 dark:to-violet-400">
-                TaskForge 
+                TaskForge
                 <span className="text-slate-800 dark:text-slate-200 font-medium text-lg font-bold ml-0.5">
                   Pro
                 </span>
@@ -96,17 +83,17 @@ const Navbar = () => {
         <div className="flex items-center gap-1.5 md:gap-3">
           {/* <ThemeSwitch /> */}
           {isPending ? (
-            <div className="flex flex-col items-center">
-              <Spinner color="success" size="lg" />
+            <div className="flex gap-2 items-center">
+              <Spinner color="success" size="sm" />
               <span className="text-primary text-sm">User...</span>
             </div>
           ) : user ? (
             <>
-              {/* <ProfileDropdown user={user} /> */} <span>User</span>
+              <UserDropdown user={user}/>
             </>
           ) : (
             <>
-              <Link href={"/signin"}>
+              <Link href={"/login"}>
                 <Button
                   variant="primary"
                   className="btn-secondary cursor-pointer"

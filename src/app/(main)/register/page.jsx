@@ -15,6 +15,7 @@ import { FcGoogle } from "react-icons/fc";
 import { FormSubmitBtn } from "@/components/main/FormSubmitBtn";
 import { authClient } from "@/lib/auth-client";
 import toast from "react-hot-toast";
+import Link from "next/link";
 
 export default function RegisterPage() {
   const [isVisible, setIsVisible] = useState(false);
@@ -23,35 +24,33 @@ export default function RegisterPage() {
   const toggleVisibility = () => setIsVisible(!isVisible);
 
   const handleFormSubmit = async (formData) => {
-    try {
-      const userData = Object.fromEntries(formData.entries());
-      userData.role = selectedRole;
-      userData.isBlocked = false;
-      //  convert skills to Array
-      if (selectedRole === "Freelancer" && userData.skills) {
-        userData.skills = userData.skills
-          .split(",")
-          .map((skill) => skill.trim())
-          .filter((skill) => skill !== "");
-      } else {
-        userData.skills = [];
-      }
+    const userData = Object.fromEntries(formData.entries());
+    userData.role = selectedRole;
+    userData.isBlocked = false;
+    //  convert skills to Array
+    if (selectedRole === "Freelancer" && userData.skills) {
+      userData.skills = userData.skills
+        .split(",")
+        .map((skill) => skill.trim())
+        .filter((skill) => skill !== "");
+    } else {
+      userData.skills = [];
+    }
 
-      const { data, error } = await authClient.signUp.email(userData);
-      if (data) {
-        console.log(data);
-        toast.success("Registered Successfully!");
-      }
-      if (error) {
-        toast.error(error.message);
-      }
-    } catch (error) {
-      console.log(error);
+    const { data, error } = await authClient.signUp.email(userData);
+    if (data) {
+      console.log(data);
+      toast.success("Registered Successfully!");
+    }
+    if (error) {
+      toast.error(error.message);
     }
   };
 
-  const handleGoogleLogin = () => {
-    alert("Google Signup Successful! Registered automatically as a Client.");
+  const handleGoogleLogin =async () => {
+    const data=await authClient.signIn.social({
+      provider:"google",
+    })
   };
 
   return (
@@ -209,7 +208,7 @@ export default function RegisterPage() {
             <Label className="font-semibold text-slate-700 dark:text-slate-300">
               Password
             </Label>
-            <div className="relative flex items-center">
+            <div className="relative flex justify-between items-center">
               <Input placeholder="Enter a secure password" />
               <button
                 className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 focus:outline-none hover:text-slate-600 transition text-xs font-semibold"
@@ -266,20 +265,17 @@ export default function RegisterPage() {
           )}
 
           {/* Submit Button */}
-          {/* <Button
-            type="submit"
-            isDisabled={isPending}
-            className="w-full mt-4 bg-gradient-to-r from-indigo-600 to-violet-600 text-white font-semibold rounded-xl py-3 shadow-md hover:from-indigo-700 hover:to-violet-700 transition"
-          >
-            {isPending ? (
-              <div className="flex flex-col items-center gap-2">
-                <Spinner color="warning" />
-              </div>
-            ) : (
-              `Register as ${selectedRole}`
-            )}
-          </Button> */}
           <FormSubmitBtn text="Register" role={selectedRole} />
+          {/* Link to Register Page */}
+          <p className="text-center text-sm text-slate-500 dark:text-slate-400 mt-2">
+            Already have an account?{" "}
+            <Link
+              href={"/login"}
+              className="text-indigo-600 dark:text-indigo-400 font-semibold hover:underline cursor-pointer"
+            >
+              SignIn
+            </Link>
+          </p>
         </Form>
       </div>
     </div>
