@@ -1,4 +1,5 @@
-import { ArrowRightFromSquare, Gear, Persons } from "@gravity-ui/icons";
+import { signOut } from "@/lib/auth-client";
+import { ArrowRightFromSquare } from "@gravity-ui/icons";
 import { Avatar, Dropdown, Label } from "@heroui/react";
 import Link from "next/link";
 import { BiSolidDashboard, BiUser } from "react-icons/bi";
@@ -9,6 +10,9 @@ export function UserDropdown({ user }) {
     Freelancer: "/dashboard/freelancer",
     Admin:"/dashboard/admin"
   };
+  const handleSignout=async()=>{
+    await signOut();
+  }
   return (
     <Dropdown>
       <Dropdown.Trigger className="rounded-full focus:outline-none">
@@ -31,7 +35,7 @@ export function UserDropdown({ user }) {
       <Dropdown.Popover>
         <Dropdown.Menu>
           <Dropdown.Item id="dashboard" textValue="Dashboard">
-            <Link href={roleBaseURL[user?.role]||"Client"} className="inline-block w-full">
+            <Link href={roleBaseURL[user?.role]||roleBaseURL["Client"]} className="inline-block w-full">
               <div className="flex w-full items-center justify-between gap-2">
                 <Label>Dashboard</Label>
                 <BiSolidDashboard className="size-3.5 text-muted" />
@@ -45,7 +49,7 @@ export function UserDropdown({ user }) {
             </div>
           </Dropdown.Item>
           <Dropdown.Item id="logout" textValue="Logout" variant="danger">
-            <div className="flex w-full items-center justify-between gap-2">
+            <div className="flex w-full items-center justify-between gap-2" onClick={handleSignout}>
               <Label>Log Out</Label>
               <ArrowRightFromSquare className="size-3.5 text-danger" />
             </div>

@@ -42,4 +42,20 @@ export const auth = betterAuth({
       },
     },
   },
+  databaseHooks: {
+    user: {
+      create: {
+        after: async (user) => {
+          await db.collection("user").updateOne(
+            { id: user.id },
+            {
+              $set: {
+                role: "Client",
+              },
+            },
+          );
+        },
+      },
+    },
+  },
 });

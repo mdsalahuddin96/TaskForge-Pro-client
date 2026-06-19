@@ -2,12 +2,12 @@
 
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
-import { 
-  Button, 
-  FieldError, 
-  Form, 
-  Input, 
-  Label, 
+import {
+  Button,
+  FieldError,
+  Form,
+  Input,
+  Label,
   TextField,
 } from "@heroui/react";
 import toast from "react-hot-toast";
@@ -33,38 +33,30 @@ export default function LoginPage() {
     }
   };
 
-  // Form Login Handle 
+  // Form Login Handle
   const handleFormSubmit = async (formData) => {
     try {
       const loginData = Object.fromEntries(formData.entries());
-      const {data, error}=await authClient.signIn.email(loginData)
-      const role=data?.user?.role;
+      const { data, error } = await authClient.signIn.email(loginData);
+      const role = data?.user?.role;
       toast.success("Logged in successfully!");
       handleRoleRedirect(role);
-
     } catch (error) {
       console.error("Login Error:", error);
       toast.error("Invalid credentials, please try again.");
-    } 
+    }
   };
 
   // Google OAuth লগইন হ্যান্ডলার (অলওয়েজ ক্লায়েন্ট হিসেবে রিডাইরেক্ট হবে)
   const handleGoogleLogin = async () => {
-    try {
-      console.log("Google Login Initiated...");
-      // Better-Auth Google Sign-In Logic Here
-      
-      toast.success("Logged in with Google!");
-      handleRoleRedirect("Client"); // রিকোয়ারমেন্ট অনুযায়ী গুগল লগইন = Client (হোম পেজ)
-    } catch (error) {
-      toast.error("Google Authentication failed.");
-    }
+    const data = await authClient.signIn.social({
+      provider: "google",
+    });
   };
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-gradient-to-tr from-slate-50 to-indigo-50 p-6 dark:from-slate-900 dark:to-slate-950">
       <div className="w-full max-w-md rounded-2xl border border-slate-100 bg-white p-8 shadow-xl dark:border-slate-800 dark:bg-slate-900">
-        
         {/* Attractive Heading */}
         <div className="text-center mb-8">
           <h1 className="text-4xl font-extrabold tracking-tight bg-gradient-to-r from-indigo-600 via-purple-600 to-violet-500 bg-clip-text text-transparent">
@@ -76,15 +68,15 @@ export default function LoginPage() {
         </div>
 
         {/* Google OAuth Button */}
-                <Button
-                  type="button"
-                  variant="outline"
-                  className="w-full mb-6 font-medium border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800 transition"
-                  onPress={handleGoogleLogin}
-                >
-                  <FcGoogle />
-                  Continue with Google
-                </Button>
+        <Button
+          type="button"
+          variant="outline"
+          className="w-full mb-6 font-medium border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800 transition"
+          onPress={handleGoogleLogin}
+        >
+          <FcGoogle />
+          Continue with Google
+        </Button>
 
         {/* Divider */}
         <div className="relative my-6 flex items-center justify-center">
@@ -98,7 +90,6 @@ export default function LoginPage() {
 
         {/* Credentials Form */}
         <Form className="flex flex-col gap-5" action={handleFormSubmit}>
-          
           {/* Email Field */}
           <TextField
             isRequired
@@ -111,15 +102,23 @@ export default function LoginPage() {
               return null;
             }}
           >
-            <Label className="font-semibold text-slate-700 dark:text-slate-300">Email</Label>
+            <Label className="font-semibold text-slate-700 dark:text-slate-300">
+              Email
+            </Label>
             <Input placeholder="you@example.com" />
             <FieldError className="text-xs text-danger" />
           </TextField>
 
           {/* Password Field */}
-          <TextField isRequired name="password" type={isVisible ? "text" : "password"}>
+          <TextField
+            isRequired
+            name="password"
+            type={isVisible ? "text" : "password"}
+          >
             <div className="flex justify-between items-center mb-1">
-              <Label className="font-semibold text-slate-700 dark:text-slate-300">Password</Label>
+              <Label className="font-semibold text-slate-700 dark:text-slate-300">
+                Password
+              </Label>
               <span className="text-xs text-indigo-600 dark:text-indigo-400 hover:underline cursor-pointer">
                 Forgot password?
               </span>
@@ -138,17 +137,19 @@ export default function LoginPage() {
           </TextField>
 
           {/* Dynamic Submit Button with your custom loader styling */}
-         
-          <FormSubmitBtn text="Log In"/>
+
+          <FormSubmitBtn text="Log In" />
 
           {/* Link to Register Page */}
           <p className="text-center text-sm text-slate-500 dark:text-slate-400 mt-2">
             Don&apos;t have an account?{" "}
-            <Link href={"/register"} className="text-indigo-600 dark:text-indigo-400 font-semibold hover:underline cursor-pointer">
+            <Link
+              href={"/register"}
+              className="text-indigo-600 dark:text-indigo-400 font-semibold hover:underline cursor-pointer"
+            >
               Register here
             </Link>
           </p>
-
         </Form>
       </div>
     </div>
