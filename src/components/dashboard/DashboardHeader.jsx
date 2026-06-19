@@ -1,11 +1,11 @@
-'use client'
+"use client";
 import { HamburgerContext } from "@/providers/HamburgerContextProvider";
 import { Avatar, Button } from "@heroui/react";
 import React, { useContext } from "react";
 import { FiBell, FiMenu } from "react-icons/fi";
 
 const DashboardHeader = () => {
-    const {setIsSidebarOpen}=useContext(HamburgerContext)
+  const { setIsSidebarOpen } = useContext(HamburgerContext);
   return (
     <header className="sticky top-0 z-30 h-16 bg-white/70 backdrop-blur-md border-b border-slate-200/50 dark:bg-slate-900/75 dark:border-slate-800/50 flex items-center justify-between px-6">
       {/* লেফট সাইড: হ্যামবার্গার (মোবাইলের জন্য) এবং টাইটেল */}
@@ -40,12 +40,13 @@ const DashboardHeader = () => {
 
         {/* প্রোফাইল অবতার */}
         <div className="flex items-center gap-2.5 cursor-pointer">
-          <Avatar
-            src="https://images.unsplash.com/photo-1534528741775-53994a69daeb"
-            size="sm"
-            isBordered
-            className="border-indigo-600"
-          />
+          <Avatar>
+            <Avatar.Image
+              alt="John Doe"
+              src="https://img.heroui.chat/image/avatar?w=400&h=400&u=3"
+            />
+            <Avatar.Fallback>JD</Avatar.Fallback>
+          </Avatar>
           <div className="hidden md:flex flex-col text-left">
             <span className="text-xs font-bold leading-tight">
               Sarah Connor

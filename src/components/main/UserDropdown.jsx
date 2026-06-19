@@ -48,8 +48,8 @@ export function UserDropdown({ user }) {
               <BiUser className="size-3.5 text-muted" />
             </div>
           </Dropdown.Item>
-          <Dropdown.Item id="logout" textValue="Logout" variant="danger">
-            <div className="flex w-full items-center justify-between gap-2" onClick={handleSignout}>
+          <Dropdown.Item id="logout" textValue="Logout" variant="danger" onClick={handleSignout}>
+            <div className="flex w-full items-center justify-between gap-2" >
               <Label>Log Out</Label>
               <ArrowRightFromSquare className="size-3.5 text-danger" />
             </div>

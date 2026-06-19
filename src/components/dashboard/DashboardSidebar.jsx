@@ -18,7 +18,7 @@ import { HamburgerContext } from "@/providers/HamburgerContextProvider";
 import { BiHome } from "react-icons/bi";
 import { GrTasks } from "react-icons/gr";
 import { CgProfile } from "react-icons/cg";
-const DashboardSidebar = () => {
+const DashboardSidebar = ({user}) => {
   const { isSidebarOpen, setIsSidebarOpen } = useContext(HamburgerContext);
   const pathname = usePathname();
 
@@ -66,7 +66,7 @@ const DashboardSidebar = () => {
   ]
   }
 
-  const menuItems = menuItem["Freelancer"];
+  const menuItems = menuItem[user?.role||"Client"];
   return (
     <div>
       {/* Backdrop Overlay for mobile device */}
@@ -134,7 +134,7 @@ const DashboardSidebar = () => {
         </div>
 
         {/* Sidebar bottom: Logout button */}
-        <div className="pt-4 border-t border-slate-100 dark:border-slate-800">
+        <div className=" border-t border-slate-100 dark:border-slate-800">
           <button className="w-full flex items-center gap-3 px-4 py-3 text-sm font-medium text-danger hover:bg-danger-50 dark:hover:bg-danger-950/20 rounded-xl transition-colors group">
             <FiLogOut className="w-5 h-5 text-danger transition-transform group-hover:-translate-x-0.5" />
             Logout
