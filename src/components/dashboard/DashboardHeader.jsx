@@ -1,10 +1,10 @@
 "use client";
 import { HamburgerContext } from "@/providers/HamburgerContextProvider";
-import { Avatar, Button } from "@heroui/react";
+import { Button } from "@heroui/react";
 import React, { useContext } from "react";
-import { FiBell, FiMenu } from "react-icons/fi";
+import { FiBell, FiLogOut, FiMenu } from "react-icons/fi";
 
-const DashboardHeader = () => {
+const DashboardHeader = ({user}) => {
   const { setIsSidebarOpen } = useContext(HamburgerContext);
   return (
     <header className="sticky top-0 z-30 h-16 bg-white/70 backdrop-blur-md border-b border-slate-200/50 dark:bg-slate-900/75 dark:border-slate-800/50 flex items-center justify-between px-6">
@@ -17,13 +17,13 @@ const DashboardHeader = () => {
           <FiMenu className="w-5 h-5" />
         </button>
         <h2 className="text-lg font-bold tracking-tight text-slate-800 dark:text-slate-200 hidden sm:block">
-          Dashboard Workspace
+         {user?.role} Dashboard
         </h2>
       </div>
 
-      {/* রাইট সাইড: নোটিফিকেশন ও ইউজার প্রোফাইল */}
+      {/*Notification and logout */}
       <div className="flex items-center gap-4">
-        {/* নোটিফিকেশন বাটন */}
+        {/* Notification */}
         <Button
           isIconOnly
           variant="light"
@@ -35,27 +35,14 @@ const DashboardHeader = () => {
           </div>
         </Button>
 
-        {/* ডিভাইডার */}
+        {/* Divider */}
         <span className="h-5 w-[1px] bg-slate-200 dark:bg-slate-800" />
 
-        {/* প্রোফাইল অবতার */}
-        <div className="flex items-center gap-2.5 cursor-pointer">
-          <Avatar>
-            <Avatar.Image
-              alt="John Doe"
-              src="https://img.heroui.chat/image/avatar?w=400&h=400&u=3"
-            />
-            <Avatar.Fallback>JD</Avatar.Fallback>
-          </Avatar>
-          <div className="hidden md:flex flex-col text-left">
-            <span className="text-xs font-bold leading-tight">
-              Sarah Connor
-            </span>
-            <span className="text-[10px] text-slate-400 font-medium">
-              Freelancer
-            </span>
-          </div>
-        </div>
+        {/* Logout button */}
+        <button className="w-full flex items-center gap-3 px-4 py-3 text-sm font-medium text-danger cursor-pointer hover:bg-danger-50 dark:hover:bg-danger-950/20 rounded-xl transition-colors group">
+          <FiLogOut className="w-5 h-5 text-danger transition-transform group-hover:-translate-x-0.5" />
+          Logout
+        </button>
       </div>
     </header>
   );

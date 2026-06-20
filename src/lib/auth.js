@@ -23,13 +23,16 @@ export const auth = betterAuth({
   user: {
     additionalFields: {
       role: {
-        default: "Client",
+        type: "string",
+        required: false,
+        defaultValue: "Client",
+        input: true,
       },
       isBlocked: {
         default: false,
       },
       skills: {
-        type: "string", // অথবা array ব্যবহার করতে পারেন ডাটাবেজ অনুযায়ী
+        type: "string", 
         required: false,
       },
       bio: {
@@ -42,20 +45,20 @@ export const auth = betterAuth({
       },
     },
   },
-  databaseHooks: {
-    user: {
-      create: {
-        after: async (user) => {
-          await db.collection("user").updateOne(
-            { id: user.id },
-            {
-              $set: {
-                role: "Client",
-              },
-            },
-          );
-        },
-      },
-    },
-  },
+  // databaseHooks: {
+  //   user: {
+  //     create: {
+  //       after: async (user) => {
+  //         await db.collection("user").updateOne(
+  //           { id: user.id },
+  //           {
+  //             $set: {
+  //               role: "Client",
+  //             },
+  //           },
+  //         );
+  //       },
+  //     },
+  //   },
+  // },
 });

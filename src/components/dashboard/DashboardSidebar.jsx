@@ -18,55 +18,61 @@ import { HamburgerContext } from "@/providers/HamburgerContextProvider";
 import { BiHome } from "react-icons/bi";
 import { GrTasks } from "react-icons/gr";
 import { CgProfile } from "react-icons/cg";
-const DashboardSidebar = ({user}) => {
+import { Avatar } from "@heroui/react";
+import { MdDashboard } from "react-icons/md";
+const DashboardSidebar = ({ user }) => {
   const { isSidebarOpen, setIsSidebarOpen } = useContext(HamburgerContext);
   const pathname = usePathname();
 
   // Dashboard Menu Item
-  const menuItem={
-    Client:[
-    { text: "Home", href: "/dashboard/client", icon: BiHome },
-    {
-      text: "Post Task",
-      href: "/dashboard/client/post-task",
-      icon: FiFileText,
-    },
-    { text: "My Tasks", href: "/dashboard/client/my-tasks", icon: GrTasks },
-    { text: "Proposals", href: "/dashboard/client/proposals", icon: FiLayers },
-    { text: "Profile", href: "/dashboard/client/profile", icon: CgProfile },
-  ],
-  Freelancer:[
-    { text: "Dashboard", href: "/dashboard/freelancer", icon: BiHome },
-    {
-      text: "Proposals",
-      href: "/dashboard/freelancer/proposals",
-      icon: FiLayers,
-    },
-    {
-      text: "Projects",
-      href: "/dashboard/freelancer/projects",
-      icon: FiCheckCircle,
-    },
-    {
-      text: "Earnings",
-      href: "/dashboard/freelancer/earnings",
-      icon: FiDollarSign,
-    },
-    { text: "Profile", href: "/dashboard/freelancer/profile", icon: FiUser },
-  ],
-  Admin:[
-    { text: "Dashboard", href: "/dashboard/admin", icon: BiHome },
-    { text: "Users", href: "/dashboard/admin/users", icon: FiUsers },
-    { text: "Tasks", href: "/dashboard/admin/tasks", icon: FiFileText },
-    {
-      text: "Transactions",
-      href: "/dashboard/admin/transactions",
-      icon: FiCreditCard,
-    },
-  ]
-  }
+  const menuItem = {
+    Client: [
+      { text: "Overview", href: "/dashboard/client", icon: MdDashboard  },
+      {
+        text: "Post Task",
+        href: "/dashboard/client/post-task",
+        icon: FiFileText,
+      },
+      { text: "My Tasks", href: "/dashboard/client/my-tasks", icon: GrTasks },
+      {
+        text: "Proposals",
+        href: "/dashboard/client/proposals",
+        icon: FiLayers,
+      },
+      { text: "Profile", href: "/dashboard/client/profile", icon: CgProfile },
+    ],
+    Freelancer: [
+      { text: "Overview", href: "/dashboard/freelancer", icon: MdDashboard },
+      {
+        text: "Proposals",
+        href: "/dashboard/freelancer/proposals",
+        icon: FiLayers,
+      },
+      {
+        text: "Projects",
+        href: "/dashboard/freelancer/projects",
+        icon: FiCheckCircle,
+      },
+      {
+        text: "Earnings",
+        href: "/dashboard/freelancer/earnings",
+        icon: FiDollarSign,
+      },
+      { text: "Profile", href: "/dashboard/freelancer/profile", icon: FiUser },
+    ],
+    Admin: [
+      { text: "Overview", href: "/dashboard/admin", icon: MdDashboard },
+      { text: "Users", href: "/dashboard/admin/users", icon: FiUsers },
+      { text: "Tasks", href: "/dashboard/admin/tasks", icon: FiFileText },
+      {
+        text: "Transactions",
+        href: "/dashboard/admin/transactions",
+        icon: FiCreditCard,
+      },
+    ],
+  };
 
-  const menuItems = menuItem[user?.role||"Client"];
+  const menuItems = menuItem[user?.role || "Client"];
   return (
     <div>
       {/* Backdrop Overlay for mobile device */}
@@ -78,7 +84,7 @@ const DashboardSidebar = ({user}) => {
       )}
       <aside
         className={`
-        fixed inset-y-0 left-0 z-50 w-64 bg-white dark:bg-slate-900 border-r border-slate-200/60 dark:border-slate-800/60 
+        fixed inset-y-0 left-0 z-50 w-64 min-h-screen bg-white dark:bg-slate-900 border-r border-slate-200/60 dark:border-slate-800/60 
         flex flex-col justify-between p-5 transition-transform duration-300 lg:static lg:translate-x-0
         ${isSidebarOpen ? "translate-x-0" : "-translate-x-full"}
       `}
@@ -135,10 +141,27 @@ const DashboardSidebar = ({user}) => {
 
         {/* Sidebar bottom: Logout button */}
         <div className=" border-t border-slate-100 dark:border-slate-800">
-          <button className="w-full flex items-center gap-3 px-4 py-3 text-sm font-medium text-danger hover:bg-danger-50 dark:hover:bg-danger-950/20 rounded-xl transition-colors group">
-            <FiLogOut className="w-5 h-5 text-danger transition-transform group-hover:-translate-x-0.5" />
-            Logout
-          </button>
+          <div className="flex items-center gap-2.5 cursor-pointer">
+            <Avatar>
+              <Avatar.Image
+                alt={user?.name}
+                src={user?.image}
+                width={200}
+                height={200}
+              />
+              <Avatar.Fallback delayMs={600}>
+                {user?.name ? user.name.slice(0, 2).toUpperCase() : "JD"}
+              </Avatar.Fallback>
+            </Avatar>
+            <div className="hidden md:flex flex-col text-left">
+              <span className="text-xs font-bold leading-tight">
+                {user?.name}
+              </span>
+              <span className="text-[10px] text-slate-400 font-medium">
+                {user?.role}
+              </span>
+            </div>
+          </div>
         </div>
       </aside>
     </div>

@@ -7,6 +7,8 @@ import { IoLogInOutline } from "react-icons/io5";
 import { FiCpu } from "react-icons/fi";
 import { useSession } from "@/lib/auth-client";
 import { UserDropdown } from "./UserDropdown";
+import { AnimatePresence, motion } from "framer-motion";
+import { BiLogIn } from "react-icons/bi";
 const navItems = [
   { href: "/", text: "Home" },
   { href: "/browse-tasks", text: "Browse Tasks" },
@@ -79,7 +81,7 @@ const Navbar = () => {
           ))}
         </ul>
         {/* login & logout */}
-        <div className="flex items-center gap-1.5 md:gap-3">
+        <div className="flex items-center gap-1.5 md:gap-4">
           {/* <ThemeSwitch /> */}
           {isPending ? (
             <div className="flex gap-2 items-center">
@@ -88,16 +90,14 @@ const Navbar = () => {
             </div>
           ) : user ? (
             <>
-              <UserDropdown user={user}/>
+              <UserDropdown user={user} />
             </>
           ) : (
             <>
-              <Link href={"/login"}>
-                <Button
-                  variant="primary"
-                  className="btn-secondary cursor-pointer"
-                >
-                  <IoLogInOutline /> Login
+            <Link href={"/login"} className="font-semibold text-slate-600 hover:text-indigo-600 dark:text-slate-300 dark:hover:text-indigo-400">Sign In</Link>
+              <Link href={"#"}>
+                <Button className="sm:w-auto px-4 py-3 bg-gradient-to-r from-indigo-600 via-purple-600 to-violet-600 text-white font-bold rounded-md shadow-lg shadow-indigo-600/15 hover:from-indigo-700 hover:to-violet-700 hover:scale-105 transition duration-300 flex items-center justify-center gap-2">
+                  Get Started
                 </Button>
               </Link>
             </>
@@ -107,23 +107,26 @@ const Navbar = () => {
       {/* Mobile menu */}
       {isMenuOpen && (
         <>
-          <div className="border-t border-separator md:hidden">
-            <ul className="flex flex-col gap-2 p-4">
+          {/* Overlay  */}
+          <div
+            className="fixed min-h-screen inset-0 top-16 z-40 bg-slate-900/10 backdrop-blur-sm md:hidden transition-opacity"
+            onClick={() => setIsMenuOpen(false)}
+          />
+
+          {/* Menu*/}
+          <div className="absolute top-16 left-0 w-full z-50 bg-white/95 dark:bg-slate-900/95 backdrop-blur-md border-b border-slate-200/60 dark:border-slate-800/60 shadow-xl md:hidden">
+            <ul className="flex flex-col gap-1.5 p-4 max-h-[calc(100vh-4rem)] overflow-y-auto">
               {navItems.map((item, ind) => (
-                <button
-                  className="text-left inline-block"
+                <li
                   key={ind}
+                  className="w-full list-none"
                   onClick={() => setIsMenuOpen(false)}
                 >
-                  <NavLink item={item}></NavLink>
-                </button>
+                  <NavLink item={item} isMobile={true} />
+                </li>
               ))}
             </ul>
           </div>
-          <div
-            className="min-h-screen bg-transparent"
-            onClick={() => setIsMenuOpen(false)}
-          ></div>
         </>
       )}
     </nav>
