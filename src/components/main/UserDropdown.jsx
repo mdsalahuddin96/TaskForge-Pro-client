@@ -19,7 +19,7 @@ export function UserDropdown({ user }) {
         <div className="px-3 py-2 rounded-full cursor-pointer transition-all duration-200 hover:bg-slate-100 dark:hover:bg-slate-800 active:scale-95">
           <div className="flex items-center gap-2">
             <Avatar size="md">
-              <Avatar.Image alt={user?.name} src={user?.image} />
+              <Avatar.Image alt={user?.name} src={user?.image}  />
               <Avatar.Fallback delayMs={600}>
                 {user?.name ? user.name.slice(0, 2).toUpperCase() : "JD"}
               </Avatar.Fallback>

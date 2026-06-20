@@ -3,12 +3,10 @@ import Link from "next/link";
 import React, { useState } from "react";
 import NavLink from "./NavLinks";
 import { Button, Spinner } from "@heroui/react";
-import { IoLogInOutline } from "react-icons/io5";
 import { FiCpu } from "react-icons/fi";
 import { useSession } from "@/lib/auth-client";
 import { UserDropdown } from "./UserDropdown";
-import { AnimatePresence, motion } from "framer-motion";
-import { BiLogIn } from "react-icons/bi";
+
 const navItems = [
   { href: "/", text: "Home" },
   { href: "/browse-tasks", text: "Browse Tasks" },

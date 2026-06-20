@@ -74,7 +74,7 @@ const DashboardSidebar = ({ user }) => {
 
   const menuItems = menuItem[user?.role || "Client"];
   return (
-    <div>
+    <div className="h-screen sticky top-0 z-40 flex">
       {/* Backdrop Overlay for mobile device */}
       {isSidebarOpen && (
         <div
@@ -84,7 +84,7 @@ const DashboardSidebar = ({ user }) => {
       )}
       <aside
         className={`
-        fixed inset-y-0 left-0 z-50 w-64 min-h-screen bg-white dark:bg-slate-900 border-r border-slate-200/60 dark:border-slate-800/60 
+        fixed inset-y-0 left-0 z-50 w-64 bg-white dark:bg-slate-900 border-r border-slate-200/60 dark:border-slate-800/60 
         flex flex-col justify-between p-5 transition-transform duration-300 lg:static lg:translate-x-0
         ${isSidebarOpen ? "translate-x-0" : "-translate-x-full"}
       `}
