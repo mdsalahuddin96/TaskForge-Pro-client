@@ -1,8 +1,18 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import { Chip, Button, Modal, TextField, Label, Input } from "@heroui/react";
+import {
+  Chip,
+  Button,
+  Modal,
+  TextField,
+  Label,
+  Input,
+  Avatar,
+  Form,
+  Spinner,
+} from "@heroui/react";
 import {
   FiCalendar,
   FiDollarSign,
@@ -16,20 +26,45 @@ import {
   FiCheckCircle,
 } from "react-icons/fi";
 import toast from "react-hot-toast";
+import { postProposal } from "@/lib/actions/postProposal";
+import { getProposal } from "@/lib/api/getProposal";
+import { usePathname } from "next/navigation";
 
-export default function TaskDetails({ task, similarTasks }) {
+export default function TaskDetails({ task, similarTasks, user }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
-
+  const [pending, setPending] = useState(false);
+  const [isApplied, setIsApplied] = useState(false);
+  useEffect(()=>{
+    const fetchProposal=async()=>{
+      const proposal=await getProposal(task?._id,user?.email)
+      console.log("proposal:",proposal)
+      if(proposal){
+        setIsApplied(true)
+      }
+    }
+    fetchProposal()
+  },[task?._id, user?.email])
+  // calculate day left
   const getDaysLeft = (deadlineStr) => {
     const diff = new Date(deadlineStr) - new Date();
     const days = Math.ceil(diff / (1000 * 60 * 60 * 24));
     return days > 0 ? days : 0;
   };
 
-  const handleProposalSubmit = (e) => {
+  const handleProposalSubmit = async (e) => {
     e.preventDefault();
-    toast.success("Your strategy and proposal have been sent successfully!");
-    setIsModalOpen(false);
+    setPending(true);
+    const formData = new FormData(e.currentTarget);
+    const proposedData = Object.fromEntries(formData.entries());
+    proposedData.taskId = task?._id;
+    proposedData.freelancerEmail = user?.email;
+    proposedData.status = "pending";
+    const result = await postProposal(proposedData);
+    if (result.insertedId) {
+      toast.success("Proposal Submitted Successfully");
+      setPending(false);
+      setIsModalOpen(false);
+    }
   };
 
   return (
@@ -51,7 +86,7 @@ export default function TaskDetails({ task, similarTasks }) {
                   variant="flat"
                   className="font-bold text-xs bg-purple-50 text-purple-600 dark:bg-purple-950/30 dark:text-purple-400 border border-purple-100/30"
                 >
-                 <FiBriefcase className="mx-1 text-xs" /> {task.category}
+                  <FiBriefcase className="mx-1 text-xs" /> {task?.category}
                 </Chip>
                 <Chip
                   size="sm"
@@ -59,12 +94,12 @@ export default function TaskDetails({ task, similarTasks }) {
                   variant="soft"
                   className="font-bold text-xs capitalize"
                 >
-                 <FiCheckCircle className="mx-1 text-xs" /> {task.status}
+                  <FiCheckCircle className="mx-1 text-xs" /> {task?.status}
                 </Chip>
               </div>
 
               <h1 className="text-xl sm:text-2xl lg:text-3xl font-black tracking-tight leading-snug text-slate-900 dark:text-white mb-5">
-                {task.title}
+                {task?.title}
               </h1>
 
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 pt-4 border-t border-slate-100 dark:border-slate-800/60 text-xs font-bold text-slate-400">
@@ -75,7 +110,7 @@ export default function TaskDetails({ task, similarTasks }) {
                       Client
                     </span>
                     <span className="text-slate-700 dark:text-slate-300 truncate block max-w-[120px]">
-                      {task.clientName}
+                      {task?.clientName}
                     </span>
                   </div>
                 </div>
@@ -86,7 +121,7 @@ export default function TaskDetails({ task, similarTasks }) {
                       Deadline
                     </span>
                     <span className="text-slate-700 dark:text-slate-300 block">
-                      {task.deadline}
+                      {task?.deadline}
                     </span>
                   </div>
                 </div>
@@ -97,7 +132,7 @@ export default function TaskDetails({ task, similarTasks }) {
                       Budget
                     </span>
                     <span className="text-slate-900 dark:text-slate-100 text-sm font-black">
-                      ${task.budget}
+                      ${task?.budget}
                     </span>
                   </div>
                 </div>
@@ -108,7 +143,7 @@ export default function TaskDetails({ task, similarTasks }) {
                       Days Left
                     </span>
                     <span className="text-amber-600 dark:text-amber-400 block">
-                      {getDaysLeft(task.deadline)} Days
+                      {getDaysLeft(task?.deadline)} Days
                     </span>
                   </div>
                 </div>
@@ -142,15 +177,28 @@ export default function TaskDetails({ task, similarTasks }) {
               </h2>
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 items-center">
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-full bg-indigo-50 dark:bg-indigo-950/40 flex items-center justify-center font-bold text-indigo-600 text-sm">
-                    {task.clientName.slice(0, 2).toUpperCase()}
-                  </div>
+                  <Avatar>
+                    <Avatar.Image
+                      imgprops={{
+                        referrerPolicy: "no-referrer",
+                      }}
+                      alt={task?.clientName}
+                      src={task?.clientImage}
+                      width={200}
+                      height={200}
+                    />
+                    <Avatar.Fallback delayMs={600}>
+                      {task?.clientName
+                        ? task?.clientName.slice(0, 2).toUpperCase()
+                        : "JD"}
+                    </Avatar.Fallback>
+                  </Avatar>
                   <div>
                     <h3 className="text-sm font-bold text-slate-800 dark:text-slate-200">
-                      {task.clientName}
+                      {task?.clientName}
                     </h3>
                     <p className="text-xs text-slate-400 font-medium flex items-center gap-1 mt-0.5">
-                      <FiMail className="w-3 h-3" /> {task.clientEmail}
+                      <FiMail className="w-3 h-3" /> {task?.clientEmail}
                     </p>
                   </div>
                 </div>
@@ -159,7 +207,7 @@ export default function TaskDetails({ task, similarTasks }) {
                     Total Posted Tasks
                   </span>
                   <span className="text-base font-black text-slate-800 dark:text-slate-200">
-                    {task.clientPostedTasks} Jobs
+                    {task?.clientPostedJobs} Jobs
                   </span>
                 </div>
                 <div>
@@ -167,7 +215,14 @@ export default function TaskDetails({ task, similarTasks }) {
                     Member Since
                   </span>
                   <span className="text-sm font-bold text-slate-600 dark:text-slate-400">
-                    {task.clientJoinedDate}
+                    {new Date(task.clientCreatedAt).toLocaleDateString(
+                      "en-GB",
+                      {
+                        month: "short",
+                        day: "2-digit",
+                        year: "numeric",
+                      },
+                    )}
                   </span>
                 </div>
               </div>
@@ -210,9 +265,16 @@ export default function TaskDetails({ task, similarTasks }) {
               <button
                 onClick={() => setIsModalOpen(true)}
                 className="w-full bg-gradient-to-r from-indigo-600 via-purple-600 to-violet-600 text-white font-bold rounded-xl py-3.5 shadow-md hover:from-indigo-700 hover:to-violet-700 transition flex items-center justify-center gap-2 group"
+                disabled={isApplied}
               >
-                <FiSend className="w-4 h-4 transition-transform group-hover:translate-x-1 group-hover:-translate-y-0.5" />
-                <span>Submit Proposal</span>
+                {isApplied ? (
+                  <>Already Applied</>
+                ) : (
+                  <>
+                    <FiSend className="w-4 h-4 transition-transform group-hover:translate-x-1 group-hover:-translate-y-0.5" />
+                    <span>Submit Proposal</span>
+                  </>
+                )}
               </button>
             </motion.div>
           </div>
@@ -285,7 +347,7 @@ export default function TaskDetails({ task, similarTasks }) {
                 </p>
               </Modal.Header>
               <Modal.Body className="p-6">
-                <form
+                <Form
                   onSubmit={handleProposalSubmit}
                   className="flex flex-col gap-4"
                 >
@@ -298,11 +360,7 @@ export default function TaskDetails({ task, similarTasks }) {
                     <Label className="text-slate-700 dark:text-slate-300 font-bold text-xs">
                       Proposed Budget (USD)
                     </Label>
-                    <Input
-                      placeholder="Enter amount"
-                      min="1"
-                      defaultValue={task.budget.toString()}
-                    />
+                    <Input placeholder="Enter amount" min="1" />
                   </TextField>
                   <TextField
                     className="w-full"
@@ -338,12 +396,20 @@ export default function TaskDetails({ task, similarTasks }) {
                     </Button>
                     <button
                       type="submit"
+                      disabled={pending}
                       className="bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-bold px-5 py-2 rounded-xl text-sm transition shadow-md"
                     >
-                      Send Proposal
+                      {pending ? (
+                        <span className="flex items-center gap-0.5">
+                          Sending
+                          <Spinner color="current" size="sm" />
+                        </span>
+                      ) : (
+                        "Send Proposal"
+                      )}
                     </button>
                   </div>
-                </form>
+                </Form>
               </Modal.Body>
             </Modal.Dialog>
           </Modal.Container>
