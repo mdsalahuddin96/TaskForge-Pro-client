@@ -1,56 +1,55 @@
 "use client";
 
 import React, { useState } from "react";
-import { 
-  FieldError, 
-  Form, 
-  Input, 
-  Label, 
+import {
+  FieldError,
+  Form,
+  Input,
+  Label,
   TextField,
-  Spinner
+  Spinner,
 } from "@heroui/react";
-import { FiPlusCircle, FiDollarSign, FiCalendar, FiTag } from "react-icons/fi";
+import { FiPlusCircle } from "react-icons/fi";
 import toast from "react-hot-toast";
+import { useSession } from "@/lib/auth-client";
+import { createTask } from "@/lib/actions/createTask";
 
 export default function PostTaskForm() {
   const [pending, setPending] = useState(false);
-
-  // জনপ্রিয় কিছু ক্যাটাগরির লিস্ট (সিলেক্ট বা সাজেশনের জন্য)
+  const { data } = useSession();
+  const user = data?.user;
+  // Some Category list for suggestion or select
   const categories = [
     "Web Development",
     "UI/UX Design",
     "Content Writing",
     "Graphics Design",
     "Digital Marketing",
-    "Bug Fixing"
+    "Bug Fixing",
   ];
 
   const handleFormSubmit = async (e) => {
     e.preventDefault();
     setPending(true);
-
     try {
       const formData = new FormData(e.currentTarget);
       const taskData = Object.fromEntries(formData.entries());
-
-      // ডাটা টাইপ কনভার্সন এবং ডিফল্ট স্টেট অ্যাসাইন করা
       taskData.budget = Number(taskData.budget);
-      taskData.status = "open"; // আপনার রিকোয়ারমেন্ট অনুযায়ী Default State: open
-
+      taskData.status = "open";
+      taskData.clientId = user?.id;
+      taskData.clientEmail = user?.email;
       console.log("Submitting Task Data:", taskData);
 
-      // এখানে আপনার MongoDB বা ব্যাকএন্ড API এন্ডপয়েন্ট কল করবেন:
-      // const res = await fetch("/api/tasks/create", {
-      //   method: "POST",
-      //   body: JSON.stringify(taskData)
-      // });
+      const result = await createTask(taskData);
 
       // ডেমো সাকসেস রেসপন্স
-      await new Promise((resolve) => setTimeout(resolve, 1500)); // কৃত্রিম লোডিং টাইম
-      
-      toast.success("Task published successfully! It is now open for proposals.");
-      e.currentTarget.reset(); // ফর্মের ডাটা ক্লিয়ার করার জন্য
-
+      await new Promise((resolve) => setTimeout(resolve, 1500));
+      if (result.insertedId) {
+        toast.success(
+          "Task published successfully! It is now open for proposals.",
+        );
+        e.target.reset();
+      }
     } catch (error) {
       console.error("Error creating task:", error);
       toast.error("Failed to publish task. Please try again.");
@@ -61,33 +60,37 @@ export default function PostTaskForm() {
 
   return (
     <div className="w-full max-w-2xl mx-auto rounded-2xl border border-slate-100 bg-white p-6 sm:p-8 shadow-xl dark:border-slate-800 dark:bg-slate-900">
-      
       {/* Header */}
       <div className="mb-8">
         <h1 className="text-3xl font-extrabold tracking-tight bg-gradient-to-r from-indigo-600 via-purple-600 to-violet-500 bg-clip-text text-transparent">
           Publish a New Task
         </h1>
         <p className="mt-2 text-sm text-slate-500 dark:text-slate-400">
-          Fill in the details below to instantly connect with skilled freelancers.
+          Fill in the details below to instantly connect with skilled
+          freelancers.
         </p>
       </div>
 
       {/* Main Form */}
       <Form className="flex flex-col gap-6" onSubmit={handleFormSubmit}>
-        
         {/* Task Title */}
         <TextField isRequired name="title" type="text">
-          <Label className="font-semibold text-slate-700 dark:text-slate-300"> Task Title</Label>
+          <Label className="font-semibold text-slate-700 dark:text-slate-300">
+            {" "}
+            Task Title
+          </Label>
           <Input placeholder="e.g., Fix CSS responsiveness bug on login page" />
           <FieldError className="text-xs text-danger" />
         </TextField>
 
         {/* Category */}
         <TextField isRequired name="category" type="text">
-          <Label className="font-semibold text-slate-700 dark:text-slate-300">Category</Label>
+          <Label className="font-semibold text-slate-700 dark:text-slate-300">
+            Category
+          </Label>
           <div className="relative flex items-center">
-            <Input 
-              placeholder="Select or type a category" 
+            <Input
+              placeholder="Select or type a category"
               list="task-categories"
             />
             {/* <FiTag className="absolute right-3 text-slate-400 w-4 h-4 pointer-events-none" /> */}
@@ -102,7 +105,9 @@ export default function PostTaskForm() {
 
         {/* Description */}
         <div className="flex flex-col gap-1.5">
-          <Label className="font-semibold text-slate-700 dark:text-slate-300">Description</Label>
+          <Label className="font-semibold text-slate-700 dark:text-slate-300">
+            Description
+          </Label>
           <textarea
             required
             name="description"
@@ -114,15 +119,18 @@ export default function PostTaskForm() {
 
         {/* Budget  Deadline */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-          
           {/* Budget (USD) */}
           <TextField
             isRequired
             name="budget"
             type="number"
-            validate={(value) => Number(value) <= 0 ? "Budget must be greater than $0" : null}
+            validate={(value) =>
+              Number(value) <= 0 ? "Budget must be greater than $0" : null
+            }
           >
-            <Label className="font-semibold text-slate-700 dark:text-slate-300">Budget (USD)</Label>
+            <Label className="font-semibold text-slate-700 dark:text-slate-300">
+              Budget (USD)
+            </Label>
             <div className="relative flex items-center">
               <Input placeholder="e.g., 50" min="1" className="w-full" />
               {/* <FiDollarSign className="absolute left-0 text-slate-400 w-4 h-4 pointer-events-none" /> */}
@@ -132,14 +140,15 @@ export default function PostTaskForm() {
 
           {/*  Deadline Date */}
           <TextField isRequired name="deadline" type="date">
-            <Label className="font-semibold text-slate-700 dark:text-slate-300">Deadline Date</Label>
+            <Label className="font-semibold text-slate-700 dark:text-slate-300">
+              Deadline Date
+            </Label>
             <div className="relative flex items-center">
               <Input className="w-full" />
               {/* <FiCalendar className="absolute right-3 text-slate-400 w-4 h-4 pointer-events-none" /> */}
             </div>
             <FieldError className="text-xs text-danger" />
           </TextField>
-
         </div>
 
         {/* Submit Button */}
@@ -157,7 +166,6 @@ export default function PostTaskForm() {
             </div>
           )}
         </button>
-
       </Form>
     </div>
   );
