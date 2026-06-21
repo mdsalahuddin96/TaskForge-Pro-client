@@ -4,8 +4,9 @@ import React from "react";
 import { Button } from "@heroui/react";
 import { motion } from "framer-motion";
 import { FiPlusCircle, FiSearch, FiArrowRight } from "react-icons/fi";
+import { useSession } from "@/lib/auth-client";
 
-export default function Hero() {
+export default function Hero({ user }) {
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
@@ -24,7 +25,7 @@ export default function Hero() {
       transition: { type: "spring", stiffness: 100, damping: 20 },
     },
   };
-  const user = "Client";
+
   const badgeVariants = {
     hidden: { opacity: 0, scale: 0.8 },
     visible: {
@@ -109,27 +110,33 @@ export default function Hero() {
           className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4 w-full sm:w-auto"
         >
           {/* Post a Task Button (Client) */}
-          {user === "Client" && (
-            <Button
-              size="lg"
-              className="w-full sm:w-auto px-8 py-6 bg-gradient-to-r from-indigo-600 via-purple-600 to-violet-600 text-white font-bold rounded-xl shadow-lg shadow-indigo-600/15 hover:from-indigo-700 hover:to-violet-700 hover:scale-105 transition duration-300 flex items-center justify-center gap-2"
-            >
-              <FiPlusCircle className="w-5 h-5" />
-              <span>Post a Task</span>
-            </Button>
-          )}
 
-          {/* Browse Tasks Button (Freelancer) */}
-          {user === "Freelancer" && (
+          <Button
+            size="lg"
+            className="w-full sm:w-auto px-8 py-6 bg-gradient-to-r from-indigo-600 via-purple-600 to-violet-600 text-white font-bold rounded-xl shadow-lg shadow-indigo-600/15 hover:from-indigo-700 hover:to-violet-700 hover:scale-105 transition duration-300 flex items-center justify-center gap-2"
+          >
+            {user?.role.toLowerCase() === "client" ? (
+              <>
+                {" "}
+                <FiPlusCircle className="w-5 h-5" />
+                <span>Post a Task</span>
+              </>
+            ) : (
+              <>
+                <FiSearch className="w-5 h-5" />
+                <span>Browse Tasks</span>
+              </>
+            )}
+          </Button>
+
+          {/* Browse Tasks Button (Freelancer)
+          {user?.role.toLowerCase() === "freelancer" && (
             <Button
               size="lg"
               variant="bordered"
               className="w-full sm:w-auto px-8 py-6 border-2 border-slate-200 dark:border-slate-800 font-bold rounded-xl text-slate-700 dark:text-slate-300 hover:bg-slate-50 hover:scale-105 dark:hover:bg-slate-900 transition duration-300 flex items-center justify-center gap-2"
-            >
-              <FiSearch className="w-5 h-5 text-slate-400 dark:text-slate-500" />
-              <span>Browse Tasks</span>
-            </Button>
-          )}
+            ></Button>
+          )} */}
         </motion.div>
       </motion.div>
     </section>

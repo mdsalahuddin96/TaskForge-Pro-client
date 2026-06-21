@@ -5,9 +5,10 @@ import { motion } from "framer-motion";
 import { Chip } from "@heroui/react";
 import { FiDollarSign, FiCalendar, FiUser, FiArrowUpRight, FiBriefcase } from "react-icons/fi";
 import toast from "react-hot-toast";
+import { useRouter } from "next/navigation";
 
 export default function TaskContainer({ tasks }) {
-  
+  const router=useRouter()
   // Container Animation
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -27,9 +28,8 @@ export default function TaskContainer({ tasks }) {
     }
   };
 
-  const handleCardClick = (title) => {
-    toast.success(`Opening details & Proposal panel for: \n"${title.slice(0, 30)}..."`);
-    // এখানে আপনার ডিটেইলস প্যানেল ওপেন করার ফাংশন বা রাউটিং কল হবে
+  const handleCardClick = (title,id) => {
+    router.push(`/browse-tasks/${id}`)
   };
 
   return (
@@ -48,7 +48,7 @@ export default function TaskContainer({ tasks }) {
             boxShadow: "0 12px 30px -10px rgba(99, 102, 241, 0.12)",
           }}
           whileTap={{ scale: 0.99 }}
-          onClick={() => handleCardClick(task.title)}
+          onClick={() => handleCardClick(task.title,task?._id)}
           className="cursor-pointer group relative flex flex-col justify-between p-6 bg-white dark:bg-slate-900 border border-slate-200/60 dark:border-slate-800/60 rounded-2xl transition-all duration-200 overflow-hidden"
         >
           {/* Active border on hover */}
