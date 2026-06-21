@@ -1,6 +1,8 @@
+// import { getTaskByClientEmail } from '@/lib/api/getTaskByClientEmail';
 import React from 'react';
 
-const BrowseTaskPage = () => {
+const BrowseTaskPage =async () => {
+    // const tasks=await getTaskByClientEmail()
     return (
         <div>
             All Tasks

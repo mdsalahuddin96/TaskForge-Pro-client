@@ -24,9 +24,9 @@ export default function LoginPage() {
 
   // Dynamically Redirect according to role
   const handleRoleRedirect = (role) => {
-    if (role === "Client") {
+    if (role.toLowerCase() === "client") {
       router.push("/"); // Client যাবে হোম পেজে
-    } else if (role === "Freelancer") {
+    } else if (role.toLowerCase() === "freelancer") {
       router.push("/dashboard/freelancer"); // Freelancer ও Admin যাবে ড্যাশবোর্ডে
     } else {
       router.push("/dashboard/admin"); // সেফটি ব্যাকআপ রিডাইরেক্ট
@@ -38,12 +38,17 @@ export default function LoginPage() {
     try {
       const loginData = Object.fromEntries(formData.entries());
       const { data, error } = await authClient.signIn.email(loginData);
-      const role = data?.user?.role;
-      toast.success("Logged in successfully!");
-      handleRoleRedirect(role);
+      if (data) {
+        toast.success("Logged in successfully!");
+        const role = data?.user?.role;
+        console.log(data)
+        handleRoleRedirect(role);
+      }
+      if(error){
+        toast.error(error.message)
+      }
     } catch (error) {
       console.error("Login Error:", error);
-      toast.error("Invalid credentials, please try again.");
     }
   };
 

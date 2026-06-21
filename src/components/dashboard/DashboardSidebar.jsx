@@ -27,7 +27,7 @@ const DashboardSidebar = ({ user }) => {
   // Dashboard Menu Item
   const menuItem = {
     Client: [
-      { text: "Overview", href: "/dashboard/client", icon: MdDashboard  },
+      { text: "Overview", href: "/dashboard/client", icon: MdDashboard },
       {
         text: "Post Task",
         href: "/dashboard/client/post-task",
@@ -144,6 +144,9 @@ const DashboardSidebar = ({ user }) => {
           <div className="flex items-center gap-2.5 cursor-pointer">
             <Avatar>
               <Avatar.Image
+                imgprops={{
+                  referrerPolicy: "no-referrer",
+                }}
                 alt={user?.name}
                 src={user?.image}
                 width={200}
