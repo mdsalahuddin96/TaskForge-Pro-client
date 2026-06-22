@@ -27,24 +27,13 @@ import {
 } from "react-icons/fi";
 import toast from "react-hot-toast";
 import { postProposal } from "@/lib/actions/postProposal";
-import { getProposal } from "@/lib/api/getProposal";
-import { usePathname } from "next/navigation";
+import { LuCircleCheckBig } from "react-icons/lu";
 
-export default function TaskDetails({ task, similarTasks, user }) {
+export default function TaskDetails({ task, similarTasks, user, proposal }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [pending, setPending] = useState(false);
-  const [isApplied, setIsApplied] = useState(false);
-  useEffect(()=>{
-    const fetchProposal=async()=>{
-      const proposal=await getProposal(task?._id,user?.email)
-      console.log("proposal:",proposal)
-      if(proposal){
-        setIsApplied(true)
-      }
-    }
-    fetchProposal()
-  },[task?._id, user?.email])
-  // calculate day left
+  const [isApplied, setIsApplied] = useState(proposal);
+
   const getDaysLeft = (deadlineStr) => {
     const diff = new Date(deadlineStr) - new Date();
     const days = Math.ceil(diff / (1000 * 60 * 60 * 24));
@@ -268,7 +257,10 @@ export default function TaskDetails({ task, similarTasks, user }) {
                 disabled={isApplied}
               >
                 {isApplied ? (
-                  <>Already Applied</>
+                  <>
+                    <LuCircleCheckBig className="w-4 h-4" />
+                    <span>Already Applied</span>
+                  </>
                 ) : (
                   <>
                     <FiSend className="w-4 h-4 transition-transform group-hover:translate-x-1 group-hover:-translate-y-0.5" />
