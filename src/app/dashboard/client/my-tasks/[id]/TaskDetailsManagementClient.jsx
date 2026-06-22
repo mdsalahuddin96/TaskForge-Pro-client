@@ -30,9 +30,8 @@ export default function TaskDetailsManagementClient({ taskData }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [activeMessage, setActiveMessage] = useState({ name: "", message: "" });
 
-  // টাস্কটি কি অলরেডি বুকড বা ইন-প্রোগ্রেস?
-  const isTaskLocked =
-    task.status === "in-progress" || task.status === "closed";
+  // Task already complete or Inprogress?
+  const isTaskLocked = task.status === "in-progress" || task.status === "completed";
 
   // স্ট্যাটাস চিপ জেনারেটর
   const getStatusChip = (status, type = "task") => {
@@ -95,12 +94,10 @@ export default function TaskDetailsManagementClient({ taskData }) {
   const handleAcceptProposal = (proposal) => {
     toast.loading("Redirecting to secure Stripe checkout...");
 
-    // আপনার রিকোয়ারমেন্ট অনুযায়ী ডামি স্ট্রাইপ পেজে রিডাইরেক্ট (Query parameters সহ)
     setTimeout(() => {
-      router.push(
-        `/payment/checkout?taskId=${task._id}&proposalId=${proposal._id}&amount=${proposal.budgetPrice}`,
-      );
-    }, 1000);
+      toast.dismiss();
+      router.push(`/checkout?proposalId=${proposal._id}`,);
+    }, 500);
   };
 
   return (
@@ -152,7 +149,7 @@ export default function TaskDetailsManagementClient({ taskData }) {
           </div>
         </div>
         {/* Edit & Delete Button */}
-        {task?.status.toLowerCase() === "open" && (
+        {!isTaskLocked && (
           <div className="mt-5 flex items-center gap-4">
             <Button variant="secondary">
               <BiEdit /> Edit
@@ -243,8 +240,7 @@ export default function TaskDetailsManagementClient({ taskData }) {
                     {proposals.map((proposal) => {
                       const isRejected = proposal.status === "rejected";
                       const isAccepted = proposal.status === "accepted";
-                      const disableActions =
-                        isTaskLocked || isRejected || isAccepted;
+                      const disableActions = isTaskLocked || isRejected || isAccepted;
 
                       return (
                         <Table.Row
@@ -304,10 +300,7 @@ export default function TaskDetailsManagementClient({ taskData }) {
                                 color="success"
                                 className={`font-bold rounded-lg ${disableActions ? "opacity-30 cursor-not-allowed" : ""}`}
                                 disabled={disableActions}
-                                onPress={() => handleAcceptProposal(proposal)}
-                                startContent={
-                                  <FiCheck className="w-3.5 h-3.5" />
-                                }
+                                onClick={() => handleAcceptProposal(proposal)}
                               >
                                 Accept
                               </Button>
@@ -320,11 +313,10 @@ export default function TaskDetailsManagementClient({ taskData }) {
                                 color="danger"
                                 className={`rounded-lg ${disableActions ? "opacity-30 cursor-not-allowed" : ""}`}
                                 disabled={disableActions}
-                                onPress={() =>
-                                  handleRejectProposal(proposal._id)
-                                }
+                                onClick={() =>handleRejectProposal(proposal._id) }
                               >
-                                <FiX className="w-4 h-4" />
+                                Reject
+                                {/* <FiX className="w-4 h-4" /> */}
                               </Button>
                             </div>
                           </Table.Cell>
