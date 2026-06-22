@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { motion } from "framer-motion";
 import {
   Chip,
@@ -28,11 +28,17 @@ import {
 import toast from "react-hot-toast";
 import { postProposal } from "@/lib/actions/postProposal";
 import { LuCircleCheckBig } from "react-icons/lu";
+import { usePathname, useRouter } from "next/navigation";
+import { revalidateRoute } from "@/lib/actions/revalidateRoute";
+
+
 
 export default function TaskDetails({ task, similarTasks, user, proposal }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [pending, setPending] = useState(false);
   const [isApplied, setIsApplied] = useState(proposal);
+  const pathName=usePathname()
+  const router=useRouter()
 
   const getDaysLeft = (deadlineStr) => {
     const diff = new Date(deadlineStr) - new Date();
@@ -46,6 +52,7 @@ export default function TaskDetails({ task, similarTasks, user, proposal }) {
     const formData = new FormData(e.currentTarget);
     const proposedData = Object.fromEntries(formData.entries());
     proposedData.taskId = task?._id;
+    proposedData.taskTitle=task?.title;
     proposedData.freelancerEmail = user?.email;
     proposedData.status = "pending";
     const result = await postProposal(proposedData);
@@ -53,6 +60,9 @@ export default function TaskDetails({ task, similarTasks, user, proposal }) {
       toast.success("Proposal Submitted Successfully");
       setPending(false);
       setIsModalOpen(false);
+      await revalidateRoute(pathName)
+      router.push(pathName)
+      router.refresh()
     }
   };
 

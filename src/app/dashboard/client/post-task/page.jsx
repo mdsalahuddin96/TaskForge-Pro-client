@@ -13,6 +13,7 @@ import { FiPlusCircle } from "react-icons/fi";
 import toast from "react-hot-toast";
 import { useSession } from "@/lib/auth-client";
 import { createTask } from "@/lib/actions/createTask";
+import { redirectTo } from "@/lib/actions/redirectTo";
 
 export default function PostTaskForm() {
   const [pending, setPending] = useState(false);
@@ -38,17 +39,15 @@ export default function PostTaskForm() {
       taskData.status = "open";
       taskData.clientId = user?.id;
       taskData.clientEmail = user?.email;
-      console.log("Submitting Task Data:", taskData);
 
       const result = await createTask(taskData);
-
-      // ডেমো সাকসেস রেসপন্স
       await new Promise((resolve) => setTimeout(resolve, 1500));
       if (result.insertedId) {
         toast.success(
-          "Task published successfully! It is now open for proposals.",
+          "Task published successfully!",
         );
         e.target.reset();
+        redirectTo("/dashboard/client/my-tasks")
       }
     } catch (error) {
       console.error("Error creating task:", error);

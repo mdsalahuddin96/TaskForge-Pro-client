@@ -25,11 +25,11 @@ export default function LoginPage() {
   // Dynamically Redirect according to role
   const handleRoleRedirect = (role) => {
     if (role.toLowerCase() === "client") {
-      router.push("/"); // Client যাবে হোম পেজে
+      router.push("/dashboard/client"); 
     } else if (role.toLowerCase() === "freelancer") {
-      router.push("/dashboard/freelancer"); // Freelancer ও Admin যাবে ড্যাশবোর্ডে
+      router.push("/dashboard/freelancer"); 
     } else {
-      router.push("/dashboard/admin"); // সেফটি ব্যাকআপ রিডাইরেক্ট
+      router.push("/dashboard/admin"); 
     }
   };
 
