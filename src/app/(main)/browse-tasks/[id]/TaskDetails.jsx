@@ -36,7 +36,7 @@ import { revalidateRoute } from "@/lib/actions/revalidateRoute";
 export default function TaskDetails({ task, similarTasks, user, proposal }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [pending, setPending] = useState(false);
-  const [isApplied, setIsApplied] = useState(proposal);
+  const [isApplied, setIsApplied] = useState(proposal); //use for check is already applied 
   const pathName=usePathname()
   const router=useRouter()
 
@@ -54,6 +54,7 @@ export default function TaskDetails({ task, similarTasks, user, proposal }) {
     proposedData.taskId = task?._id;
     proposedData.taskTitle=task?.title;
     proposedData.freelancerEmail = user?.email;
+    proposedData.freelancerName=user?.name;
     proposedData.status = "pending";
     const result = await postProposal(proposedData);
     if (result.insertedId) {

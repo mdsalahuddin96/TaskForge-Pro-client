@@ -1,9 +1,10 @@
 import React from "react";
 import { Chip, Button } from "@heroui/react";
 import { FiCheck, FiX, FiCalendar, FiClock, FiDollarSign } from "react-icons/fi";
+import Link from "next/link";
 
 export default function ProposalCard({ proposal }) {
-  // ISO ডেটকে ইমেজ_9e7e5d.png এর মতো "Jun 22, 2026" ফরম্যাটে কনভার্ট করার ফাংশন
+  // Date convert function
   const formatDate = (dateString) => {
     if (!dateString) return "";
     const date = new Date(dateString);
@@ -15,9 +16,9 @@ export default function ProposalCard({ proposal }) {
   };
 
   return (
-    <div className="bg-white dark:bg-slate-900 border border-slate-200/60 dark:border-slate-800/60 rounded-2xl p-5 sm:p-6 shadow-sm transition-all hover:shadow-md">
-      {/* টপ সেকশন: টাইটেল, ব্যাজ এবং অ্যাকশন বাটনসমূহ */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-3">
+    <div className=" bg-white dark:bg-slate-900 border border-slate-200/60 dark:border-slate-800/60 rounded-2xl p-5 sm:p-6 shadow-sm transition-all hover:shadow-md">
+      {/* Title badge and action button*/}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
         <div className="flex items-center gap-2 flex-wrap">
           <h3 className="text-base sm:text-lg font-bold text-slate-900 dark:text-white tracking-tight">
             {proposal.taskTitle}
@@ -32,15 +33,15 @@ export default function ProposalCard({ proposal }) {
           </Chip>
         </div>
 
-        {/* অ্যাকশন বাটন (Accept & Reject) */}
+        {/* (Accept & Reject) */}
         <div className="flex items-center gap-2 self-end sm:self-center">
-          <Button
+          <Link
+            href={`/checkout?proposalId=${proposal?._id}`}
             size="sm"
             className="bg-[#00c875] hover:bg-[#00b368] text-white font-bold px-4 py-1.5 rounded-lg shadow-sm flex items-center gap-1.5 text-xs transition-colors"
-            // onPress={() => onAccept(proposal)}
           >
             <FiCheck className="stroke-[3px] text-sm" /> Accept
-          </Button>
+          </Link>
           <Button
             size="sm"
             variant="bordered"
@@ -58,7 +59,7 @@ export default function ProposalCard({ proposal }) {
       </div>
 
       {/* কভার লেটার বক্স (ইমেজ_9e7e5d.png এর মতো হালকা ব্যাকগ্রাউন্ড কন্টেইনার) */}
-      <div className="bg-slate-50/50 dark:bg-slate-950/20 rounded-xl p-4 mb-4 text-sm text-slate-600 dark:text-slate-400/90 leading-relaxed font-normal min-h-[50px]">
+      <div className="bg-slate-50/50 dark:bg-slate-950/20 rounded-xl mb-1 text-sm text-slate-600 dark:text-slate-400/90 leading-relaxed font-normal min-h-[50px]">
         {proposal.coverLetter}
       </div>
 
@@ -67,7 +68,7 @@ export default function ProposalCard({ proposal }) {
         <div className="flex items-center gap-1">
           <FiDollarSign className="text-slate-400 text-sm" />
           <span>Bid:</span>
-          <span className="text-amber-500 font-bold">${proposal.proposedBudget}</span>
+          <span className="text-xs font-black text-slate-900 dark:text-slate-100 flex items-center mt-0.5">${proposal.proposedBudget}</span>
         </div>
         <div className="flex items-center gap-1">
           <FiClock className="text-slate-400 text-sm" />
@@ -75,7 +76,7 @@ export default function ProposalCard({ proposal }) {
         </div>
         <div className="flex items-center gap-1 text-slate-400 dark:text-slate-500 font-normal">
           <FiCalendar className="text-sm" />
-          <span>{formatDate(proposal.submittedAt?.$date)}</span>
+          <span>{formatDate(proposal?.submittedAt)}</span>
         </div>
       </div>
     </div>

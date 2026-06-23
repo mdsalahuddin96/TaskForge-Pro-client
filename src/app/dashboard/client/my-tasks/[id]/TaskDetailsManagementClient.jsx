@@ -14,8 +14,6 @@ import {
   FiXCircle,
   FiMessageSquare,
   FiEye,
-  FiCheck,
-  FiX,
   FiTrash,
 } from "react-icons/fi";
 import toast from "react-hot-toast";
@@ -96,7 +94,7 @@ export default function TaskDetailsManagementClient({ taskData }) {
 
     setTimeout(() => {
       toast.dismiss();
-      router.push(`/checkout?proposalId=${proposal._id}`,);
+      router.push(`/checkout?proposalId=${proposal?._id}`,);
     }, 500);
   };
 
