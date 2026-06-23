@@ -20,7 +20,7 @@ import {
 } from "react-icons/fi";
 import { savePayment } from "@/lib/actions/savePayment";
 import toast from "react-hot-toast";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 
 const stripePromise = loadStripe(
   process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY,
@@ -50,6 +50,7 @@ function CheckoutForm({ proposal }) {
     proposedBudget: amount,
     freelancerEmail,
     taskId,
+    _id
   } = proposal;
   const onSubmit = async (e) => {
     e.preventDefault();
@@ -90,6 +91,7 @@ function CheckoutForm({ proposal }) {
           freelancerEmail,
           amount,
           taskId,
+          proposalId:_id,
           transaction_id:paymentIntent.id,
           payment_status: "paid",
         };
@@ -98,6 +100,7 @@ function CheckoutForm({ proposal }) {
         if(result.insertedId){
           toast.success("Payment Successful!")
         }
+        router.push(`/checkout/success?proposalId=${proposal?._id}`)
         setPaymentSuccess(true);
       }
     } catch (err) {
