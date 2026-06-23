@@ -3,37 +3,43 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { Chip } from "@heroui/react";
-import { FiDollarSign, FiCalendar, FiUser, FiArrowUpRight, FiBriefcase } from "react-icons/fi";
-import toast from "react-hot-toast";
+import {
+  FiDollarSign,
+  FiCalendar,
+  FiUser,
+  FiArrowUpRight,
+  FiBriefcase,
+  FiCheckCircle,
+} from "react-icons/fi";
 import { useRouter } from "next/navigation";
 
 export default function TaskContainer({ tasks }) {
-  const router=useRouter()
+  const router = useRouter();
   // Container Animation
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
-      transition: { staggerChildren: 0.1 }
-    }
+      transition: { staggerChildren: 0.1 },
+    },
   };
 
   // Card Animation
   const cardVariants = {
     hidden: { opacity: 0, y: 20 },
-    visible: { 
-      opacity: 1, 
-      y: 0, 
-      transition: { type: "spring", stiffness: 100, damping: 15 } 
-    }
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: { type: "spring", stiffness: 100, damping: 15 },
+    },
   };
 
-  const handleCardClick = (title,id) => {
-    router.push(`/browse-tasks/${id}`)
+  const handleCardClick = (title, id) => {
+    router.push(`/browse-tasks/${id}`);
   };
 
   return (
-    <motion.div 
+    <motion.div
       variants={containerVariants}
       initial="hidden"
       animate="visible"
@@ -43,12 +49,12 @@ export default function TaskContainer({ tasks }) {
         <motion.div
           key={task?._id}
           variants={cardVariants}
-          whileHover={{ 
-            y: -6, 
+          whileHover={{
+            y: -6,
             boxShadow: "0 12px 30px -10px rgba(99, 102, 241, 0.12)",
           }}
           whileTap={{ scale: 0.99 }}
-          onClick={() => handleCardClick(task.title,task?._id)}
+          onClick={() => handleCardClick(task.title, task?._id)}
           className="cursor-pointer group relative flex flex-col justify-between p-6 bg-white dark:bg-slate-900 border border-slate-200/60 dark:border-slate-800/60 rounded-2xl transition-all duration-200 overflow-hidden"
         >
           {/* Active border on hover */}
@@ -57,14 +63,26 @@ export default function TaskContainer({ tasks }) {
           <div>
             {/*Header: Category and button icon */}
             <div className="flex items-center justify-between mb-4">
-              <Chip 
-                size="sm" 
-                variant="flat" 
-                color="secondary" 
-                className="font-bold text-xs px-2.5 bg-purple-50 text-purple-600 dark:bg-purple-950/30 dark:text-purple-400 border border-purple-100/30"
-              >
-               <FiBriefcase className="mr-1"/> {task.category}
-              </Chip>
+              <div className="space-x-4">
+                <Chip
+                  size="sm"
+                  variant="flat"
+                  color="secondary"
+                  className="font-bold text-xs px-2.5 bg-purple-50 text-purple-600 dark:bg-purple-950/30 dark:text-purple-400 border border-purple-100/30"
+                >
+                  <FiBriefcase className="mr-1" /> {task.category}
+                </Chip>
+                <Chip
+                  color="success"
+                  size="sm"
+                  variant="soft"
+                  className="font-bold text-xs border border-success-200/20 capitalize"
+                >
+                  <span className="flex items-center gap-1">
+                    <FiCheckCircle className="text-xs" /> Open
+                  </span>
+                </Chip>
+              </div>
               <div className="p-1.5 rounded-lg bg-slate-50 dark:bg-slate-800 text-slate-400 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 group-hover:bg-indigo-50/50 dark:group-hover:bg-indigo-950/30 transition duration-200">
                 <FiArrowUpRight className="w-4 h-4" />
               </div>
@@ -83,9 +101,10 @@ export default function TaskContainer({ tasks }) {
 
           {/* Bottom: Budget, deadline, clientName */}
           <div className="mt-6 pt-4 border-t border-slate-100 dark:border-slate-800/60 grid grid-cols-3 gap-2 items-center text-[11px] font-bold tracking-tight text-slate-400 dark:text-slate-500">
-            
             <div className="flex flex-col gap-0.5">
-              <span className="text-[10px] font-semibold text-slate-400/80 uppercase">Est. Budget</span>
+              <span className="text-[10px] font-semibold text-slate-400/80 uppercase">
+                Est. Budget
+              </span>
               <div className="flex items-center text-slate-900 dark:text-slate-200 text-sm font-black">
                 <FiDollarSign className="text-indigo-500 w-3.5 h-3.5 -mr-0.5" />
                 <span>{task.budget}</span>
@@ -93,23 +112,28 @@ export default function TaskContainer({ tasks }) {
             </div>
 
             <div className="flex flex-col gap-0.5">
-              <span className="text-[10px] font-semibold text-slate-400/80 uppercase">Deadline</span>
+              <span className="text-[10px] font-semibold text-slate-400/80 uppercase">
+                Deadline
+              </span>
               <div className="flex items-center gap-1 text-slate-700 dark:text-slate-300 font-semibold mt-0.5">
                 <FiCalendar className="w-3.5 h-3.5 text-slate-400" />
-                <span>{task.deadline.split("-").slice(1).join("/")}</span> {/* MM/DD ফরম্যাটে শর্ট করা */}
+                <span>{task.deadline.split("-").slice(1).join("/")}</span>{" "}
+                {/* MM/DD ফরম্যাটে শর্ট করা */}
               </div>
             </div>
 
             <div className="flex flex-col gap-0.5 text-right">
-              <span className="text-[10px] font-semibold text-slate-400/80 uppercase text-right">Posted By</span>
+              <span className="text-[10px] font-semibold text-slate-400/80 uppercase text-right">
+                Posted By
+              </span>
               <div className="flex items-center justify-end gap-1 text-slate-700 dark:text-slate-300 font-semibold mt-0.5">
                 <FiUser className="w-3.5 h-3.5 text-slate-400" />
-                <span className="truncate max-w-[70px]">{task?.clientName||"Salah uddin"}</span>
+                <span className="truncate max-w-[70px]">
+                  {task?.clientName || "Salah uddin"}
+                </span>
               </div>
             </div>
-
           </div>
-
         </motion.div>
       ))}
     </motion.div>

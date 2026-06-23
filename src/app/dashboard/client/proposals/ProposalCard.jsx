@@ -1,6 +1,12 @@
 import React from "react";
 import { Chip, Button } from "@heroui/react";
-import { FiCheck, FiX, FiCalendar, FiClock, FiDollarSign } from "react-icons/fi";
+import {
+  FiCheck,
+  FiX,
+  FiCalendar,
+  FiClock,
+  FiDollarSign,
+} from "react-icons/fi";
 import Link from "next/link";
 
 export default function ProposalCard({ proposal }) {
@@ -21,7 +27,7 @@ export default function ProposalCard({ proposal }) {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
         <div className="flex items-center gap-2 flex-wrap">
           <h3 className="text-base sm:text-lg font-bold text-slate-900 dark:text-white tracking-tight">
-            {proposal.taskTitle}
+            {proposal?.taskTitle}
           </h3>
           <Chip
             size="sm"
@@ -29,33 +35,38 @@ export default function ProposalCard({ proposal }) {
             color="warning"
             className="capitalize text-xs font-semibold px-2 bg-amber-50 dark:bg-amber-950/30 text-amber-600 dark:text-amber-400 border-none h-6 rounded-md"
           >
-            {proposal.status}
+            {proposal?.status}
           </Chip>
         </div>
 
         {/* (Accept & Reject) */}
-        <div className="flex items-center gap-2 self-end sm:self-center">
-          <Link
-            href={`/checkout?proposalId=${proposal?._id}`}
-            size="sm"
-            className="bg-[#00c875] hover:bg-[#00b368] text-white font-bold px-4 py-1.5 rounded-lg shadow-sm flex items-center gap-1.5 text-xs transition-colors"
-          >
-            <FiCheck className="stroke-[3px] text-sm" /> Accept
-          </Link>
-          <Button
-            size="sm"
-            variant="bordered"
-            className="border-slate-200 dark:border-slate-800 text-[#ff4d4d] hover:bg-red-50 dark:hover:bg-red-950/20 font-bold px-4 py-1.5 rounded-lg flex items-center gap-1.5 text-xs transition-colors bg-white dark:bg-transparent"
-            // onPress={() => onReject(proposal)}
-          >
-            <FiX className="stroke-[3px] text-sm" /> Reject
-          </Button>
-        </div>
+        {proposal.status.toLowerCase() === "pending" && (
+          <div className="flex items-center gap-2 self-end sm:self-center">
+            <Link
+              href={`/checkout?proposalId=${proposal?._id}`}
+              size="sm"
+              className="bg-[#00c875] hover:bg-[#00b368] text-white font-bold px-4 py-1.5 rounded-lg shadow-sm flex items-center gap-1.5 text-xs transition-colors"
+            >
+              <FiCheck className="stroke-[3px] text-sm" /> Accept
+            </Link>
+            <Button
+              size="sm"
+              variant="bordered"
+              className="border-slate-200 dark:border-slate-800 text-[#ff4d4d] hover:bg-red-50 dark:hover:bg-red-950/20 font-bold px-4 py-1.5 rounded-lg flex items-center gap-1.5 text-xs transition-colors bg-white dark:bg-transparent"
+              // onPress={() => onReject(proposal)}
+            >
+              <FiX className="stroke-[3px] text-sm" /> Reject
+            </Button>
+          </div>
+        )}
       </div>
 
       {/* ফ্রিল্যান্সার ইমেইল সাব-হেডিং */}
       <div className="text-sm text-slate-500 dark:text-slate-400 mb-4 font-normal">
-        from <span className="font-semibold text-slate-700 dark:text-slate-300">{proposal.freelancerEmail}</span>
+        from{" "}
+        <span className="font-semibold text-slate-700 dark:text-slate-300">
+          {proposal.freelancerEmail}
+        </span>
       </div>
 
       {/* কভার লেটার বক্স (ইমেজ_9e7e5d.png এর মতো হালকা ব্যাকগ্রাউন্ড কন্টেইনার) */}
@@ -68,7 +79,9 @@ export default function ProposalCard({ proposal }) {
         <div className="flex items-center gap-1">
           <FiDollarSign className="text-slate-400 text-sm" />
           <span>Bid:</span>
-          <span className="text-xs font-black text-slate-900 dark:text-slate-100 flex items-center mt-0.5">${proposal.proposedBudget}</span>
+          <span className="text-xs font-black text-slate-900 dark:text-slate-100 flex items-center mt-0.5">
+            ${proposal.proposedBudget}
+          </span>
         </div>
         <div className="flex items-center gap-1">
           <FiClock className="text-slate-400 text-sm" />

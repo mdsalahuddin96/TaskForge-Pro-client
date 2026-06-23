@@ -60,7 +60,7 @@ export default function MyTasksClient({ tasks }) {
             className="font-bold border border-slate-200/20 capitalize"
           >
             <span className="flex items-center gap-1">
-              <FiXCircle className="text-xs" /> Closed
+              <FiXCircle className="text-xs" /> Complete
             </span>
           </Chip>
         );
