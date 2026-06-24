@@ -15,7 +15,6 @@ import {
   FiCreditCard,
 } from "react-icons/fi";
 import { HamburgerContext } from "@/providers/HamburgerContextProvider";
-import { BiHome } from "react-icons/bi";
 import { GrTasks } from "react-icons/gr";
 import { CgProfile } from "react-icons/cg";
 import { Avatar } from "@heroui/react";
@@ -71,7 +70,12 @@ const DashboardSidebar = ({ user }) => {
       },
     ],
   };
-
+  // Role based User Profile
+  const roleBaseProfile = {
+    Client: "/dashboard/client/profile",
+    Freelancer: "/dashboard/freelancer/profile",
+    Admin: "/dashboard/admin/profile",
+  };
   const menuItems = menuItem[user?.role || "Client"];
   return (
     <div className="h-screen sticky top-0 z-40 flex">
@@ -140,13 +144,12 @@ const DashboardSidebar = ({ user }) => {
         </div>
 
         {/* Sidebar bottom: Logout button */}
-        <div className=" border-t border-slate-100 dark:border-slate-800">
-          <div className="flex items-center gap-2.5 cursor-pointer">
+        <div className=" border-t border-slate-100 dark:border-slate-800 ">
+          <Link href={roleBaseProfile[user?.role]}>
+          <div className="mt-3 p-2 rounded-2xl flex items-center gap-2.5 cursor-pointer transition-all duration-200 hover:bg-slate-100 dark:hover:bg-slate-800">
             <Avatar>
               <Avatar.Image
-                imgprops={{
-                  referrerPolicy: "no-referrer",
-                }}
+                referrerPolicy="no-referrer"
                 alt={user?.name}
                 src={user?.image}
                 width={200}
@@ -165,6 +168,7 @@ const DashboardSidebar = ({ user }) => {
               </span>
             </div>
           </div>
+          </Link>
         </div>
       </aside>
     </div>

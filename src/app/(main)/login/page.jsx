@@ -52,7 +52,7 @@ export default function LoginPage() {
     }
   };
 
-  // Google OAuth লগইন হ্যান্ডলার (অলওয়েজ ক্লায়েন্ট হিসেবে রিডাইরেক্ট হবে)
+  // Google OAuth Login handle
   const handleGoogleLogin = async () => {
     const data = await authClient.signIn.social({
       provider: "google",

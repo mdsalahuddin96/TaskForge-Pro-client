@@ -8,18 +8,29 @@ export function UserDropdown({ user }) {
   const roleBaseURL = {
     Client: "/dashboard/client",
     Freelancer: "/dashboard/freelancer",
-    Admin:"/dashboard/admin"
+    Admin: "/dashboard/admin",
   };
-  const handleSignout=async()=>{
+  const roleBaseProfile = {
+    Client: "/dashboard/client/profile",
+    Freelancer: "/dashboard/freelancer/profile",
+    Admin: "/dashboard/admin/profile",
+  };
+  const handleSignout = async () => {
     await signOut();
-  }
+  };
   return (
     <Dropdown>
       <Dropdown.Trigger className="rounded-full focus:outline-none">
         <div className="px-3 py-2 rounded-full cursor-pointer transition-all duration-200 hover:bg-slate-100 dark:hover:bg-slate-800 active:scale-95">
           <div className="flex items-center gap-2">
             <Avatar size="md">
-              <Avatar.Image alt={user?.name} src={user?.image}  />
+              <Avatar.Image
+                referrerPolicy="no-referrer"
+                alt={user?.name}
+                src={user?.image}
+                width={200}
+                height={200}
+              />
               <Avatar.Fallback delayMs={600}>
                 {user?.name ? user.name.slice(0, 2).toUpperCase() : "JD"}
               </Avatar.Fallback>
@@ -35,7 +46,10 @@ export function UserDropdown({ user }) {
       <Dropdown.Popover>
         <Dropdown.Menu>
           <Dropdown.Item id="dashboard" textValue="Dashboard">
-            <Link href={roleBaseURL[user?.role]||roleBaseURL["Client"]} className="inline-block w-full">
+            <Link
+              href={roleBaseURL[user?.role]}
+              className="inline-block w-full"
+            >
               <div className="flex w-full items-center justify-between gap-2">
                 <Label>Dashboard</Label>
                 <BiSolidDashboard className="size-3.5 text-muted" />
@@ -43,13 +57,23 @@ export function UserDropdown({ user }) {
             </Link>
           </Dropdown.Item>
           <Dropdown.Item id="profile" textValue="Profile">
-            <div className="flex w-full items-center justify-between gap-2">
-              <Label>Profile</Label>
-              <BiUser className="size-3.5 text-muted" />
-            </div>
+            <Link
+              href={roleBaseProfile[user?.role]}
+              className="inline-block w-full"
+            >
+              <div className="flex w-full items-center justify-between gap-2">
+                <Label>Profile</Label>
+                <BiUser className="size-3.5 text-muted" />
+              </div>
+            </Link>
           </Dropdown.Item>
-          <Dropdown.Item id="logout" textValue="Logout" variant="danger" onClick={handleSignout}>
-            <div className="flex w-full items-center justify-between gap-2" >
+          <Dropdown.Item
+            id="logout"
+            textValue="Logout"
+            variant="danger"
+            onClick={handleSignout}
+          >
+            <div className="flex w-full items-center justify-between gap-2">
               <Label>Log Out</Label>
               <ArrowRightFromSquare className="size-3.5 text-danger" />
             </div>

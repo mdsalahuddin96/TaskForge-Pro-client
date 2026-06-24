@@ -1,3 +1,4 @@
+"use client"
 import React from "react";
 import { Chip, Button } from "@heroui/react";
 import {
@@ -6,10 +7,16 @@ import {
   FiCalendar,
   FiClock,
   FiDollarSign,
+  FiCheckCircle,
 } from "react-icons/fi";
 import Link from "next/link";
+import toast from "react-hot-toast";
+import { revalidateRoute } from "@/lib/actions/revalidateRoute";
+import { useRouter } from "next/navigation";
+import { updateProposalStatus } from "@/lib/api/updateProposalStatus";
 
 export default function ProposalCard({ proposal }) {
+  const router=useRouter()
   // Date convert function
   const formatDate = (dateString) => {
     if (!dateString) return "";
@@ -20,7 +27,54 @@ export default function ProposalCard({ proposal }) {
       year: "numeric",
     });
   };
+  const getStatusChip = (status) => {
+    switch (status?.toLowerCase()) {
+      case "accepted":
+        return (
+          <Chip
+            color="success"
+            size="sm"
+            variant="soft"
+            className="font-bold border border-success-200/20 capitalize"
+          >
+            <span className="flex items-center gap-1">
+              <FiCheckCircle className="text-xs" /> {status}
+            </span>
+          </Chip>
+        );
+      case "pending":
+        return (
+          <Chip
+            color="warning"
+            size="sm"
+            variant="soft"
+            className="font-bold border border-warning-200/20 capitalize"
+          >
+            <span className="flex items-center gap-1">
+              <FiClock className="text-xs" /> {status}
+            </span>
+          </Chip>
+        );
+      default:
+        return (
+          <Chip size="sm" variant="flat" className="capitalize">
+            {status}
+          </Chip>
+        );
+    }
+  };
 
+  // Handle Reject 
+  const handleRejectProposal = async (proposalId) => {
+    const result = await updateProposalStatus(proposalId, {
+      status: "rejected",
+    });
+    if (result.modifiedCount > 0) {
+      await revalidateRoute(`/dashboard/client/proposals`)
+      router.refresh()
+      toast.error("Proposal marked as rejected");
+    }
+  };
   return (
     <div className=" bg-white dark:bg-slate-900 border border-slate-200/60 dark:border-slate-800/60 rounded-2xl p-5 sm:p-6 shadow-sm transition-all hover:shadow-md">
       {/* Title badge and action button*/}
@@ -35,7 +89,7 @@ export default function ProposalCard({ proposal }) {
             color="warning"
             className="capitalize text-xs font-semibold px-2 bg-amber-50 dark:bg-amber-950/30 text-amber-600 dark:text-amber-400 border-none h-6 rounded-md"
           >
-            {proposal?.status}
+            {getStatusChip(proposal?.status)}
           </Chip>
         </div>
 
@@ -53,7 +107,7 @@ export default function ProposalCard({ proposal }) {
               size="sm"
               variant="bordered"
               className="border-slate-200 dark:border-slate-800 text-[#ff4d4d] hover:bg-red-50 dark:hover:bg-red-950/20 font-bold px-4 py-1.5 rounded-lg flex items-center gap-1.5 text-xs transition-colors bg-white dark:bg-transparent"
-              // onPress={() => onReject(proposal)}
+              onClick={() => handleRejectProposal(proposal?._id)}
             >
               <FiX className="stroke-[3px] text-sm" /> Reject
             </Button>
