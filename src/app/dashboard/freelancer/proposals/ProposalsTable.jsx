@@ -12,8 +12,7 @@ import toast from "react-hot-toast";
 import { Eye } from "@gravity-ui/icons";
 
 export default function ProposalsTable({ proposals }) {
-
-  // স্ট্যাটাস টেক্সট অনুযায়ী চিপ জেনারেট করার কাস্টম ফাংশন (Chip এর ভেতরে সরাসরি React Icons সহ)
+  // Generate chip according to status
   const getStatusChip = (status) => {
     switch (status?.toLowerCase()) {
       case "accepted":
@@ -68,7 +67,6 @@ export default function ProposalsTable({ proposals }) {
     }
   };
 
-  // অ্যাকশন বাটন হ্যান্ডলারস
   const handleEditTask = (task) => {
     toast.success(`Editing proposal for: ${task?.title?.slice(0, 20)}...`);
   };
@@ -164,9 +162,7 @@ export default function ProposalsTable({ proposals }) {
                           isIconOnly
                           size="sm"
                           variant="flat"
-                          //   disabled={task.status !== "open" && task.status !== "pending"}
-                          //   className={`rounded-lg ${task.status !== "open" && task.status !== "pending" ? "opacity-40 cursor-not-allowed" : ""}`}
-                          onPress={() => handleEditTask(task)}
+                          onClick={() => handleEditTask(task)}
                         >
                           <Eye className="w-4 h-4" />
                         </Button>
@@ -175,10 +171,8 @@ export default function ProposalsTable({ proposals }) {
                         <Button
                           size="sm"
                           variant="flat"
-                            // color={!task.hasApprovedProposal ? "danger" : "default"}
-                          isDisabled={proposal?.status==='accepted'}
-                          //   className={`rounded-lg ${task.hasApprovedProposal ? "opacity-40 cursor-not-allowed" : ""}`}
-                          onPress={() => triggerDeleteModal(task)}
+                          isDisabled={proposal?.status === "accepted"}
+                          onClick={() => triggerDeleteModal(task)}
                         >
                           <FiTrash2 className="w-4 h-4" />
                         </Button>

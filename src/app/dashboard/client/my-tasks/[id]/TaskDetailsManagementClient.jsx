@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { Table, Chip, Button, Modal, Avatar } from "@heroui/react";
+import { Table, Chip, Button, Modal, Avatar, AlertDialog } from "@heroui/react";
 import {
   FiArrowLeft,
   FiCalendar,
@@ -23,12 +23,14 @@ import { BiEdit } from "react-icons/bi";
 import { getFreelancerProfile } from "@/lib/api/getFreelancerProfile";
 import { updateProposalStatus } from "@/lib/api/updateProposalStatus";
 import { revalidateRoute } from "@/lib/actions/revalidateRoute";
+import EditTaskForm from "@/components/main/EditTaskForm";
+import { deleteTask } from "@/lib/api/deleteTask";
 
 export default function TaskDetailsManagementClient({ taskData }) {
   const router = useRouter();
   const pathName = usePathname();
-  const task=taskData;
-  const proposals=taskData?.proposals||[];
+  const task = taskData;
+  const proposals = taskData?.proposals || [];
 
   // Modal control states
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -36,7 +38,21 @@ export default function TaskDetailsManagementClient({ taskData }) {
   const [isRatingModalOpen, setIsRatingModalOpen] = useState(false);
   const [activeMessage, setActiveMessage] = useState({ name: "", message: "" });
   const [profile, setProfile] = useState(null);
- 
+  const [openEdit, setOpenEdit] = useState(false);
+
+  const handleTaskDelete =async () => {
+    const result=await deleteTask(task?._id)
+    console.log(result)
+    if(result.deletedCount>0){
+      toast.error("Post has been Deleted!")
+      router.push("/dashboard/client/my-tasks")
+      router.refresh()
+    }
+    else{
+      toast.error("Post not deleted")
+    }
+  };
+
   // Task already complete or Inprogress?
   const isTaskLocked = task?.status.toLowerCase() !== "open";
 
@@ -95,8 +111,8 @@ export default function TaskDetailsManagementClient({ taskData }) {
       status: "rejected",
     });
     if (result.modifiedCount > 0) {
-      await revalidateRoute(pathName)
-      router.refresh()
+      await revalidateRoute(pathName);
+      router.refresh();
       toast.error("Proposal marked as rejected");
     }
   };
@@ -162,12 +178,42 @@ export default function TaskDetailsManagementClient({ taskData }) {
         {/* Actions Section Conditional Rendering */}
         {!isTaskLocked ? (
           <div className="mt-5 flex items-center gap-4">
-            <Button variant="secondary">
+            <Button variant="secondary" onClick={() => setOpenEdit(!openEdit)}>
               <BiEdit /> Edit
             </Button>
-            <Button variant="danger-soft">
-              <FiTrash /> Delete
-            </Button>
+            {/* Delete button */}
+            <AlertDialog>
+              <Button variant="danger-soft"><FiTrash /> Delete</Button>
+              <AlertDialog.Backdrop>
+                <AlertDialog.Container>
+                  <AlertDialog.Dialog className="sm:max-w-[400px]">
+                    <AlertDialog.CloseTrigger />
+                    <AlertDialog.Header>
+                      <AlertDialog.Icon status="danger" />
+                      <AlertDialog.Heading>
+                        Delete Task permanently?
+                      </AlertDialog.Heading>
+                    </AlertDialog.Header>
+                    <AlertDialog.Body>
+                      <p>
+                        This will permanently delete{" "}
+                        <strong>{taskData?.title}</strong> and all of its data.
+                        This action cannot be undone.
+                      </p>
+                    </AlertDialog.Body>
+                    <AlertDialog.Footer>
+                      <Button slot="close" variant="tertiary">
+                        Cancel
+                      </Button>
+                      <Button slot="close" variant="danger" onClick={handleTaskDelete}>
+                        Confirm Delete
+                      </Button>
+                    </AlertDialog.Footer>
+                  </AlertDialog.Dialog>
+                </AlertDialog.Container>
+              </AlertDialog.Backdrop>
+            </AlertDialog>
+            
           </div>
         ) : (
           <div className="flex items-center gap-3">
@@ -225,169 +271,190 @@ export default function TaskDetailsManagementClient({ taskData }) {
         )}
       </div>
 
-      {/* Proposal Management Table */}
-      <div className="bg-white dark:bg-slate-900 border border-slate-200/60 dark:border-slate-800/60 rounded-2xl p-6 shadow-sm">
-        <div className="mb-6">
-          <h2 className="text-lg font-black tracking-tight text-slate-900 dark:text-white flex items-center gap-2">
-            <FiMessageSquare className="text-purple-600" /> Incoming Bids (
-            {proposals.length})
-          </h2>
-          <p className="text-xs text-slate-400 font-medium mt-0.5">
-            Review applicant profiles, notes, and hire the perfect match.
-          </p>
-        </div>
-        {proposals.length === 0 ? (
-          <div className="text-center py-12 border border-dashed border-slate-100 dark:border-slate-800 rounded-xl">
-            <p className="text-xs font-bold text-slate-400">
-              No proposals submitted for this task yet.
-            </p>
-          </div>
-        ) : (
-          <div className="w-full overflow-hidden rounded-xl border border-slate-100 dark:border-slate-800/80">
-            <Table
-              aria-label="Tasks dashboard configuration table"
-              className="w-full"
-            >
-              <Table.ResizableContainer>
-                <Table.Content>
-                  <Table.Header>
-                    <Table.Column isRowHeader id="title" minWidth={140}>
-                      Freelancer Name
-                    </Table.Column>
-                    <Table.Column id="profile" minWidth={100} align="center">
-                      Profile
-                    </Table.Column>
-                    <Table.Column id="budget" minWidth={90} align="center">
-                      Budget Bid
-                    </Table.Column>
-                    <Table.Column id="deadline" minWidth={90} align="center">
-                      Delivery
-                    </Table.Column>
-                    <Table.Column id="note" minWidth={70} align="center">
-                      Pitch Note
-                    </Table.Column>
-                    <Table.Column id="status" minWidth={100} align="center">
-                      Status
-                    </Table.Column>
-                    <Table.Column id="actions" minWidth={100} align="center">
-                      Actions
-                    </Table.Column>
-                  </Table.Header>
-
-                  <Table.Body>
-                    {proposals.map((proposal) => {
-                      const isPending = proposal.status === "pending";
-
-                      return (
-                        <Table.Row
-                          key={proposal._id}
-                          className="border-b last:border-0 border-slate-50 dark:border-slate-800/40 transition-colors hover:bg-slate-50/50 dark:hover:bg-slate-800/20"
+      {openEdit ? (
+        <>
+          {/* Edit task form */}
+          <EditTaskForm task={task} openEditFun={setOpenEdit} />
+        </>
+      ) : (
+        <>
+          {/* Proposal Management Table */}
+          <div className="bg-white dark:bg-slate-900 border border-slate-200/60 dark:border-slate-800/60 rounded-2xl p-6 shadow-sm">
+            <div className="mb-6">
+              <h2 className="text-lg font-black tracking-tight text-slate-900 dark:text-white flex items-center gap-2">
+                <FiMessageSquare className="text-purple-600" /> Incoming Bids (
+                {proposals.length})
+              </h2>
+              <p className="text-xs text-slate-400 font-medium mt-0.5">
+                Review applicant profiles, notes, and hire the perfect match.
+              </p>
+            </div>
+            {proposals.length === 0 ? (
+              <div className="text-center py-12 border border-dashed border-slate-100 dark:border-slate-800 rounded-xl">
+                <p className="text-xs font-bold text-slate-400">
+                  No proposals submitted for this task yet.
+                </p>
+              </div>
+            ) : (
+              <div className="w-full overflow-hidden rounded-xl border border-slate-100 dark:border-slate-800/80">
+                <Table
+                  aria-label="Tasks dashboard configuration table"
+                  className="w-full"
+                >
+                  <Table.ResizableContainer>
+                    <Table.Content>
+                      <Table.Header>
+                        <Table.Column isRowHeader id="title" minWidth={140}>
+                          Freelancer Name
+                        </Table.Column>
+                        <Table.Column
+                          id="profile"
+                          minWidth={100}
+                          align="center"
                         >
-                          {/* Freelancer Name */}
-                          <Table.Cell className="font-bold text-slate-800 dark:text-slate-200 text-xs sm:text-sm">
-                            {proposal?.freelancerName || "Freelancer"}
-                          </Table.Cell>
+                          Profile
+                        </Table.Column>
+                        <Table.Column id="budget" minWidth={90} align="center">
+                          Budget Bid
+                        </Table.Column>
+                        <Table.Column
+                          id="deadline"
+                          minWidth={90}
+                          align="center"
+                        >
+                          Delivery
+                        </Table.Column>
+                        <Table.Column id="note" minWidth={70} align="center">
+                          Pitch Note
+                        </Table.Column>
+                        <Table.Column id="status" minWidth={100} align="center">
+                          Status
+                        </Table.Column>
+                        <Table.Column
+                          id="actions"
+                          minWidth={100}
+                          align="center"
+                        >
+                          Actions
+                        </Table.Column>
+                      </Table.Header>
 
-                          {/* Profile Trigger Button */}
-                          <Table.Cell>
-                            <Button
-                              size="sm"
-                              variant="light"
-                              className="font-extrabold text-xs text-indigo-600 hover:text-indigo-700 dark:text-indigo-400 dark:hover:text-indigo-300 gap-1 bg-indigo-50/50 hover:bg-indigo-50 dark:bg-indigo-950/20 dark:hover:bg-indigo-950/40 rounded-xl px-3 py-1.5"
-                              onPress={() =>
-                                handleFreelancerProfile(
-                                  proposal?.freelancerEmail,
-                                )
-                              }
+                      <Table.Body>
+                        {proposals.map((proposal) => {
+                          const isPending = proposal.status === "pending";
+
+                          return (
+                            <Table.Row
+                              key={proposal._id}
+                              className="border-b last:border-0 border-slate-50 dark:border-slate-800/40 transition-colors hover:bg-slate-50/50 dark:hover:bg-slate-800/20"
                             >
-                              <FiUser className="w-3.5 h-3.5" /> View
-                            </Button>
-                          </Table.Cell>
+                              {/* Freelancer Name */}
+                              <Table.Cell className="font-bold text-slate-800 dark:text-slate-200 text-xs sm:text-sm">
+                                {proposal?.freelancerName || "Freelancer"}
+                              </Table.Cell>
 
-                          {/* Budget Bid */}
-                          <Table.Cell className="font-black text-slate-900 dark:text-slate-100 text-sm">
-                            ${proposal.proposedBudget}
-                          </Table.Cell>
+                              {/* Profile Trigger Button */}
+                              <Table.Cell>
+                                <Button
+                                  size="sm"
+                                  variant="light"
+                                  className="font-extrabold text-xs text-indigo-600 hover:text-indigo-700 dark:text-indigo-400 dark:hover:text-indigo-300 gap-1 bg-indigo-50/50 hover:bg-indigo-50 dark:bg-indigo-950/20 dark:hover:bg-indigo-950/40 rounded-xl px-3 py-1.5"
+                                  onPress={() =>
+                                    handleFreelancerProfile(
+                                      proposal?.freelancerEmail,
+                                    )
+                                  }
+                                >
+                                  <FiUser className="w-3.5 h-3.5" /> View
+                                </Button>
+                              </Table.Cell>
 
-                          {/* Delivery Days */}
-                          <Table.Cell className="text-slate-600 dark:text-slate-300 text-xs font-semibold">
-                            {proposal?.estimatedDays} Days
-                          </Table.Cell>
+                              {/* Budget Bid */}
+                              <Table.Cell className="font-black text-slate-900 dark:text-slate-100 text-sm">
+                                ${proposal.proposedBudget}
+                              </Table.Cell>
 
-                          {/* Message Note (Fully Moved to Icon Triggered Modal) */}
-                          <Table.Cell>
-                            <Button
-                              isIconOnly
-                              size="sm"
-                              variant="flat"
-                              color="secondary"
-                              className="text-purple-600 dark:text-purple-400 bg-purple-50 hover:bg-purple-100 dark:bg-purple-950/30 dark:hover:bg-purple-950/60 rounded-xl"
-                              onPress={() =>
-                                handleReadMessage(
-                                  proposal?.freelancerName || "Freelancer",
-                                  proposal?.coverLetter ||
-                                    "No pitch message provided.",
-                                )
-                              }
-                              aria-label="Read full proposal note"
-                            >
-                              <FiEye className="w-4 h-4" />
-                            </Button>
-                          </Table.Cell>
+                              {/* Delivery Days */}
+                              <Table.Cell className="text-slate-600 dark:text-slate-300 text-xs font-semibold">
+                                {proposal?.estimatedDays} Days
+                              </Table.Cell>
 
-                          {/* Status Chip */}
-                          <Table.Cell>
-                            {getStatusChip(proposal?.status)}
-                          </Table.Cell>
+                              {/* Message Note (Fully Moved to Icon Triggered Modal) */}
+                              <Table.Cell>
+                                <Button
+                                  isIconOnly
+                                  size="sm"
+                                  variant="flat"
+                                  color="secondary"
+                                  className="text-purple-600 dark:text-purple-400 bg-purple-50 hover:bg-purple-100 dark:bg-purple-950/30 dark:hover:bg-purple-950/60 rounded-xl"
+                                  onPress={() =>
+                                    handleReadMessage(
+                                      proposal?.freelancerName || "Freelancer",
+                                      proposal?.coverLetter ||
+                                        "No pitch message provided.",
+                                    )
+                                  }
+                                  aria-label="Read full proposal note"
+                                >
+                                  <FiEye className="w-4 h-4" />
+                                </Button>
+                              </Table.Cell>
 
-                          {/* Redesigned Premium Action Buttons */}
-                          <Table.Cell>
-                            <div className="flex items-center justify-center gap-2">
-                              {isPending ? (
-                                <>
-                                  {/* Modern Accept Button */}
-                                  <Button
-                                    isIconOnly
-                                    size="sm"
-                                    className="bg-emerald-50 text-emerald-600 hover:bg-emerald-600 hover:text-white dark:bg-emerald-950/30 dark:text-emerald-400 dark:hover:bg-emerald-600 dark:hover:text-white rounded-xl transition-all duration-200 shadow-sm border border-emerald-200/20"
-                                    onClick={() =>
-                                      handleAcceptProposal(proposal)
-                                    }
-                                    title="Accept Proposal"
-                                  >
-                                    <FiCheckCircle className="w-4 h-4" />
-                                  </Button>
+                              {/* Status Chip */}
+                              <Table.Cell>
+                                {getStatusChip(proposal?.status)}
+                              </Table.Cell>
 
-                                  {/* Modern Reject Button */}
-                                  <Button
-                                    isIconOnly
-                                    size="sm"
-                                    className="bg-rose-50 text-rose-600 hover:bg-rose-600 hover:text-white dark:bg-rose-950/30 dark:text-rose-400 dark:hover:bg-rose-600 dark:hover:text-white rounded-xl transition-all duration-200 shadow-sm border border-rose-200/20"
-                                    onClick={() =>
-                                      handleRejectProposal(proposal._id)
-                                    }
-                                    title="Reject Proposal"
-                                  >
-                                    <FiXCircle className="w-4 h-4" />
-                                  </Button>
-                                </>
-                              ) : (
-                                <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500">
-                                  Locked
-                                </span>
-                              )}
-                            </div>
-                          </Table.Cell>
-                        </Table.Row>
-                      );
-                    })}
-                  </Table.Body>
-                </Table.Content>
-              </Table.ResizableContainer>
-            </Table>
+                              {/* Redesigned Premium Action Buttons */}
+                              <Table.Cell>
+                                <div className="flex items-center justify-center gap-2">
+                                  {isPending ? (
+                                    <>
+                                      {/* Modern Accept Button */}
+                                      <Button
+                                        isIconOnly
+                                        size="sm"
+                                        className="bg-emerald-50 text-emerald-600 hover:bg-emerald-600 hover:text-white dark:bg-emerald-950/30 dark:text-emerald-400 dark:hover:bg-emerald-600 dark:hover:text-white rounded-xl transition-all duration-200 shadow-sm border border-emerald-200/20"
+                                        onClick={() =>
+                                          handleAcceptProposal(proposal)
+                                        }
+                                        title="Accept Proposal"
+                                      >
+                                        <FiCheckCircle className="w-4 h-4" />
+                                      </Button>
+
+                                      {/* Modern Reject Button */}
+                                      <Button
+                                        isIconOnly
+                                        size="sm"
+                                        className="bg-rose-50 text-rose-600 hover:bg-rose-600 hover:text-white dark:bg-rose-950/30 dark:text-rose-400 dark:hover:bg-rose-600 dark:hover:text-white rounded-xl transition-all duration-200 shadow-sm border border-rose-200/20"
+                                        onClick={() =>
+                                          handleRejectProposal(proposal._id)
+                                        }
+                                        title="Reject Proposal"
+                                      >
+                                        <FiXCircle className="w-4 h-4" />
+                                      </Button>
+                                    </>
+                                  ) : (
+                                    <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500">
+                                      Locked
+                                    </span>
+                                  )}
+                                </div>
+                              </Table.Cell>
+                            </Table.Row>
+                          );
+                        })}
+                      </Table.Body>
+                    </Table.Content>
+                  </Table.ResizableContainer>
+                </Table>
+              </div>
+            )}
           </div>
-        )}
-      </div>
+        </>
+      )}
 
       {/* MODAL 1: Cover letter display */}
       <Modal isOpen={isModalOpen} onOpenChange={setIsModalOpen}>
