@@ -1,6 +1,6 @@
 "use client";
 
-import { Table, Chip, Button } from "@heroui/react";
+import { Table, Chip, Button, AlertDialog } from "@heroui/react";
 import {
   FiClock,
   FiCheckCircle,
@@ -10,8 +10,16 @@ import {
 } from "react-icons/fi";
 import toast from "react-hot-toast";
 import { Eye } from "@gravity-ui/icons";
+import Link from "next/link";
+import { deleteProposal } from "@/lib/api/deleteProposal";
+import { usePathname, useRouter } from "next/navigation";
+import { revalidateRoute } from "@/lib/actions/revalidateRoute";
+
 
 export default function ProposalsTable({ proposals }) {
+  console.log(proposals)
+  const pathName=usePathname()
+  const router=useRouter()
   // Generate chip according to status
   const getStatusChip = (status) => {
     switch (status?.toLowerCase()) {
@@ -71,8 +79,15 @@ export default function ProposalsTable({ proposals }) {
     toast.success(`Editing proposal for: ${task?.title?.slice(0, 20)}...`);
   };
 
-  const triggerDeleteModal = (task) => {
-    toast.error(`Trigger delete modal for: ${task?.title?.slice(0, 20)}...`);
+  const handleProposalDelete =async (id) => {
+    const result=await deleteProposal(id)
+    if(result.deletedCount>0){
+      toast.error("Proposal Deleted!")
+      await revalidateRoute(pathName)
+      router.refresh()
+    }else{
+      toast.error("Proposal not deleted!")
+    }
   };
 
   return (
@@ -103,7 +118,7 @@ export default function ProposalsTable({ proposals }) {
       <div className="w-full overflow-hidden rounded-xl border border-slate-100 dark:border-slate-800/80">
         <Table aria-label="Tasks dashboard configuration table">
           <Table.ResizableContainer>
-            <Table.Content className="min-w-[750px]">
+            <Table.Content className="min-w-187.5">
               <Table.Header>
                 <Table.Column
                   isRowHeader
@@ -158,24 +173,56 @@ export default function ProposalsTable({ proposals }) {
                     <Table.Cell>
                       <div className="flex items-center gap-2">
                         {/* View Button */}
-                        <Button
-                          isIconOnly
+                        <Link
                           size="sm"
                           variant="flat"
-                          onClick={() => handleEditTask(task)}
+                          href={`/browse-tasks/${proposal?.taskId}`}
                         >
                           <Eye className="w-4 h-4" />
-                        </Button>
+                        </Link>
 
                         {/* Delete Button */}
-                        <Button
-                          size="sm"
-                          variant="flat"
-                          isDisabled={proposal?.status === "accepted"}
-                          onClick={() => triggerDeleteModal(task)}
-                        >
-                          <FiTrash2 className="w-4 h-4" />
-                        </Button>
+                        <AlertDialog>
+                          <Button
+                            size="sm"
+                            variant="flat"
+                            isDisabled={proposal?.status === "accepted"}
+                          >
+                            <FiTrash2 className="w-4 h-4" />
+                          </Button>
+                          <AlertDialog.Backdrop>
+                            <AlertDialog.Container>
+                              <AlertDialog.Dialog className="sm:max-w-[400px]">
+                                <AlertDialog.CloseTrigger />
+                                <AlertDialog.Header>
+                                  <AlertDialog.Icon status="danger" />
+                                  <AlertDialog.Heading>
+                                    Delete Proposal permanently?
+                                  </AlertDialog.Heading>
+                                </AlertDialog.Header>
+                                <AlertDialog.Body>
+                                  <p>
+                                    This will permanently delete the proposal for {" "} 
+                                    <strong>{proposal?.taskTitle}</strong> and all
+                                    of its data. This action cannot be undone.
+                                  </p>
+                                </AlertDialog.Body>
+                                <AlertDialog.Footer>
+                                  <Button slot="close" variant="tertiary">
+                                    Cancel
+                                  </Button>
+                                  <Button
+                                    slot="close"
+                                    variant="danger"
+                                    onClick={()=>handleProposalDelete(proposal?._id)}
+                                  >
+                                    Confirm Delete
+                                  </Button>
+                                </AlertDialog.Footer>
+                              </AlertDialog.Dialog>
+                            </AlertDialog.Container>
+                          </AlertDialog.Backdrop>
+                        </AlertDialog>
                       </div>
                     </Table.Cell>
                   </Table.Row>
