@@ -25,6 +25,9 @@ import { updateProposalStatus } from "@/lib/api/updateProposalStatus";
 import { revalidateRoute } from "@/lib/actions/revalidateRoute";
 import EditTaskForm from "@/components/main/EditTaskForm";
 import { deleteTask } from "@/lib/api/deleteTask";
+import { updateTask } from "@/lib/api/updateTask";
+import RatingModal from "./RatingModal";
+import { FaStar } from "react-icons/fa";
 
 export default function TaskDetailsManagementClient({ taskData }) {
   const router = useRouter();
@@ -40,66 +43,58 @@ export default function TaskDetailsManagementClient({ taskData }) {
   const [profile, setProfile] = useState(null);
   const [openEdit, setOpenEdit] = useState(false);
 
-  const handleTaskDelete =async () => {
-    const result=await deleteTask(task?._id)
-    console.log(result)
-    if(result.deletedCount>0){
-      toast.error("Post has been Deleted!")
-      router.push("/dashboard/client/my-tasks")
-      router.refresh()
-    }
-    else{
-      toast.error("Post not deleted")
+  const handleTaskDelete = async () => {
+    const result = await deleteTask(task?._id);
+    if (result.deletedCount > 0) {
+      toast.error("Post has been Deleted!");
+      router.push("/dashboard/client/my-tasks");
+      router.refresh();
+    } else {
+      toast.error("Post not deleted");
     }
   };
 
   // Task already complete or Inprogress?
   const isTaskLocked = task?.status.toLowerCase() !== "open";
 
-  // স্ট্যাটাস চিপ জেনারেটর
+  // Chip Status Generator
   const getStatusChip = (status) => {
-    const isPending = status === "pending";
-    const isAccepted =
-      status === "accepted" || status === "open" || status === "in-progress";
+    const colorMap = {
+      pending: "warning",
+      accepted: "success",
+      rejected: "danger",
+      open: "success",
+      "in-progress": "warning",
+      completed: "success",
+    };
+
+    const iconMap = {
+      pending: <FiClock />,
+      accepted: <FiCheckCircle />,
+      rejected: <FiXCircle />,
+      open: <FiCheckCircle />,
+      "in-progress": <FiClock />,
+      completed: <FiCheckCircle />,
+    };
 
     return (
       <Chip
-        color={
-          isAccepted
-            ? status === "in-progress"
-              ? "warning"
-              : "success"
-            : isPending
-              ? "warning"
-              : "danger"
-        }
+        color={colorMap[status]}
         size="sm"
         variant="soft"
-        className="font-bold capitalize border border-slate-200/10"
+        className="font-bold border border-slate-200/10"
       >
-        <span className="flex items-center gap-1">
-          {isAccepted ? (
-            status === "in-progress" ? (
-              <FiClock />
-            ) : (
-              <FiCheckCircle />
-            )
-          ) : isPending ? (
-            <FiClock />
-          ) : (
-            <FiXCircle />
-          )}
+        <span className="flex items-center gap-1 capitalize">
+          {iconMap[status]}
           {status === "in-progress" ? "In Progress" : status}
         </span>
       </Chip>
     );
   };
-
   const handleFreelancerProfile = async (email) => {
     const freelancerProfile = await getFreelancerProfile(email);
     setProfile(freelancerProfile);
     setIsProfileModalOpen(true);
-    console.log(freelancerProfile);
   };
   const handleReadMessage = (name, message) => {
     setActiveMessage({ name, message });
@@ -125,6 +120,16 @@ export default function TaskDetailsManagementClient({ taskData }) {
     }, 500);
   };
 
+  const handleCompleteTask = async () => {
+    const result = await updateTask(task?._id, { status: "completed" });
+    if (result.modifiedCount > 0) {
+      router.push("/dashboard/client/my-tasks");
+      router.refresh();
+      toast.success("Work approved! Task marked as completed.");
+    } else {
+      toast.error("Work not approved! Something wrong.");
+    }
+  };
   return (
     <div className="space-y-6">
       {/* Back to my task */}
@@ -144,7 +149,7 @@ export default function TaskDetailsManagementClient({ taskData }) {
           <span className="text-[10px] font-extrabold tracking-wide uppercase px-2.5 py-1 bg-indigo-50 dark:bg-indigo-950/40 text-indigo-600 dark:text-indigo-400 rounded-md">
             {task?.category}
           </span>
-          {getStatusChip(task?.status)}
+          {getStatusChip(task?.status.toLowerCase())}
         </div>
         <h1 className="text-xl sm:text-2xl font-black tracking-tight text-slate-900 dark:text-white mb-3">
           {task?.title}
@@ -183,7 +188,9 @@ export default function TaskDetailsManagementClient({ taskData }) {
             </Button>
             {/* Delete button */}
             <AlertDialog>
-              <Button variant="danger-soft"><FiTrash /> Delete</Button>
+              <Button variant="danger-soft">
+                <FiTrash /> Delete
+              </Button>
               <AlertDialog.Backdrop>
                 <AlertDialog.Container>
                   <AlertDialog.Dialog className="sm:max-w-[400px]">
@@ -205,7 +212,11 @@ export default function TaskDetailsManagementClient({ taskData }) {
                       <Button slot="close" variant="tertiary">
                         Cancel
                       </Button>
-                      <Button slot="close" variant="danger" onClick={handleTaskDelete}>
+                      <Button
+                        slot="close"
+                        variant="danger"
+                        onClick={handleTaskDelete}
+                      >
                         Confirm Delete
                       </Button>
                     </AlertDialog.Footer>
@@ -213,29 +224,27 @@ export default function TaskDetailsManagementClient({ taskData }) {
                 </AlertDialog.Container>
               </AlertDialog.Backdrop>
             </AlertDialog>
-            
           </div>
         ) : (
-          <div className="flex items-center gap-3">
-            {task?.status !== "complete" ? (
+          <div className="mt-5 flex items-center gap-3">
+            {task?.status.toLowerCase() !== "completed" ? (
               <div className="flex items-center gap-2 bg-slate-50 dark:bg-slate-950/40 p-2 rounded-xl border border-slate-100 dark:border-slate-800/60">
                 {/* Checking submitted url present or not*/}
-                {task?.submittedUrl ? (
-                  <Button
-                    as="a"
-                    href={task.submittedUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    size="sm"
-                    variant="flat"
-                    color="primary"
-                    className="font-bold text-xs rounded-lg"
-                    onPress={() =>
-                      toast.success("Opening submission link to review...")
-                    }
-                  >
-                    <FiEye className="w-3.5 h-3.5" /> Review Submitted Work
-                  </Button>
+                {task?.deliverable_url ? (
+                  <Link href={task?.deliverable_url} target="_blank">
+                    <Button
+                      rel="noopener noreferrer"
+                      size="sm"
+                      variant="flat"
+                      color="primary"
+                      className="font-bold text-xs rounded-lg"
+                      onPress={() =>
+                        toast.success("Opening submission link to review...")
+                      }
+                    >
+                      <FiEye className="w-3.5 h-3.5" /> Review Submitted Work
+                    </Button>
+                  </Link>
                 ) : (
                   <span className="text-xs text-slate-400 px-2 font-medium">
                     Waiting for submission...
@@ -247,11 +256,8 @@ export default function TaskDetailsManagementClient({ taskData }) {
                   size="sm"
                   color="success"
                   className="font-black text-xs text-white bg-emerald-600 rounded-lg shadow-sm"
-                  isDisabled={!task?.submittedUrl}
-                  onPress={() => {
-                    // এখানে API কল হয়ে টাস্ক স্ট্যাটাস 'complete' হবে
-                    toast.success("Work approved! Task marked as completed.");
-                  }}
+                  isDisabled={!task?.deliverable_url}
+                  onClick={handleCompleteTask}
                 >
                   <FiCheckCircle className="w-3.5 h-3.5" /> Approve & Complete
                 </Button>
@@ -402,7 +408,7 @@ export default function TaskDetailsManagementClient({ taskData }) {
 
                               {/* Status Chip */}
                               <Table.Cell>
-                                {getStatusChip(proposal?.status)}
+                                {getStatusChip(proposal?.status.toLowerCase())}
                               </Table.Cell>
 
                               {/* Redesigned Premium Action Buttons */}
@@ -491,19 +497,17 @@ export default function TaskDetailsManagementClient({ taskData }) {
 
       {/* MODAL 2: Freelancer Information Display */}
       <Modal isOpen={isProfileModalOpen} onOpenChange={setIsProfileModalOpen}>
-        <Modal.Backdrop>
+        <Modal.Backdrop className="bg-black/40 backdrop-blur-sm">
           <Modal.Container placement="center">
             <Modal.Dialog className="sm:max-w-md bg-white dark:bg-slate-900 border border-slate-200/60 dark:border-slate-800/60 rounded-2xl overflow-hidden shadow-xl">
               <Modal.CloseTrigger
                 onClick={() => setIsProfileModalOpen(false)}
               />
 
-              <Modal.Header className="flex flex-col items-center justify-center pt-8 pb-4 bg-slate-50/50 dark:bg-slate-950/20 border-b border-slate-100 dark:border-slate-800/60">
+              <Modal.Header className="flex flex-col items-center justify-center pt-8 pb-4 bg-slate-50/50 dark:bg-slate-950/20 border-b border-slate-100 dark:border-slate-800/60 w-full">
                 <Avatar className="h-20 w-20 rounded-2xl">
                   <Avatar.Image
-                    imgprops={{
-                      referrerPolicy: "no-referrer",
-                    }}
+                    referrerPolicy="no-referrer"
                     alt={profile?.name}
                     src={profile?.image}
                     height={200}
@@ -516,12 +520,39 @@ export default function TaskDetailsManagementClient({ taskData }) {
                       : "JD"}
                   </Avatar.Fallback>
                 </Avatar>
+
                 <Modal.Heading className="text-lg font-black text-slate-900 dark:text-white tracking-tight">
                   {profile?.name}
                 </Modal.Heading>
+
+                {/* Role and Professional Badge */}
                 <span className="text-xs font-bold text-slate-400 mt-0.5 uppercase tracking-wider flex items-center gap-1">
                   <FiBriefcase className="text-indigo-500" /> {profile?.role}
                 </span>
+
+                {/* Interactive/Visual Rating Row Addition */}
+                <div className="flex items-center gap-2 mt-2 bg-white dark:bg-slate-900 px-3 py-1 rounded-full border border-slate-100 dark:border-slate-800 shadow-sm">
+                  <div className="flex items-center gap-0.5 text-amber-400">
+                    {[1, 2, 3, 4, 5].map((starIdx) => (
+                      <FaStar
+                        key={starIdx}
+                        className={`w-3 h-3 ${
+                          starIdx <= Math.round(profile?.averageRating || 0)
+                            ? "fill-current"
+                            : "text-slate-100 dark:text-slate-800"
+                        }`}
+                      />
+                    ))}
+                  </div>
+                  <span className="text-xs font-black text-slate-700 dark:text-slate-300">
+                    {profile?.averageRating
+                      ? profile.averageRating.toFixed(1)
+                      : "0.0"}
+                  </span>
+                  <span className="text-[10px] font-bold text-slate-400 border-l border-slate-200 dark:border-slate-700 pl-2">
+                    {profile?.totalReviews || 0} reviews
+                  </span>
+                </div>
               </Modal.Header>
 
               <Modal.Body className="p-6 space-y-4">
@@ -589,85 +620,16 @@ export default function TaskDetailsManagementClient({ taskData }) {
         </Modal.Backdrop>
       </Modal>
       {/* MODAL 3: Rating & Review for Freelancer */}
-      <Modal isOpen={isRatingModalOpen} onOpenChange={setIsRatingModalOpen}>
-        <Modal.Backdrop>
-          <Modal.Container placement="center">
-            <Modal.Dialog className="sm:max-w-md bg-white dark:bg-slate-900 border border-slate-200/60 dark:border-slate-800/60 rounded-2xl overflow-hidden shadow-xl">
-              <Modal.CloseTrigger onClick={() => setIsRatingModalOpen(false)} />
-
-              <Modal.Header className="flex flex-col items-center justify-center pt-6 pb-2">
-                <div className="bg-amber-50 dark:bg-amber-950/40 p-3 rounded-full text-amber-500 mb-2">
-                  ⭐
-                </div>
-                <Modal.Heading className="text-base font-black text-slate-900 dark:text-white tracking-tight">
-                  Rate Freelancer&apos;s Work
-                </Modal.Heading>
-                <p className="text-xs text-slate-400 font-medium text-center px-6 mt-1">
-                  Share your experience with{" "}
-                  <span className="font-bold text-slate-600 dark:text-slate-300">
-                    Freelancer Name
-                  </span>{" "}
-                  to help the community.
-                </p>
-              </Modal.Header>
-
-              <Modal.Body className="p-6 space-y-5">
-                {/* ১. স্টার সিলেক্টর সেকশন */}
-                <div className="flex flex-col items-center justify-center gap-1.5">
-                  <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">
-                    Select Stars
-                  </span>
-                  <div className="flex items-center gap-2 text-2xl cursor-pointer">
-                    {/* এখানে আপনার সুবিধামতো ১-৫ লুপ বা react-stars/react-rating কম্পোনেন্ট বসাতে পারেন */}
-                    {["⭐", "⭐", "⭐", "⭐", "⭐"].map((star, idx) => (
-                      <span
-                        key={idx}
-                        className="hover:scale-110 transition-transform"
-                      >
-                        {star}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-
-                {/* ২. শর্ট রিভিউ টেক্সট এরিয়া */}
-                <div className="flex flex-col gap-1.5">
-                  <label className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">
-                    Short Review / Feedback
-                  </label>
-                  <textarea
-                    rows={3}
-                    placeholder="Write a brief note about their communication, speed, and quality of work..."
-                    className="w-full text-xs font-medium p-3 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-950/20 focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 resize-none placeholder:text-slate-400"
-                  />
-                </div>
-
-                {/* অ্যাকশন বাটন */}
-                <div className="flex items-center gap-3 pt-2">
-                  <Button
-                    variant="light"
-                    className="w-1/2 rounded-xl font-bold text-xs"
-                    onClick={() => setIsRatingModalOpen(false)}
-                  >
-                    Cancel
-                  </Button>
-                  <Button
-                    color="primary"
-                    className="w-1/2 bg-indigo-600 text-white rounded-xl font-black text-xs shadow-md shadow-indigo-600/10"
-                    onClick={() => {
-                      // এখানে আপনার রিভিউ সাবমিট করার API ট্রিগার হবে
-                      toast.success("Thank you for your feedback!");
-                      setIsRatingModalOpen(false);
-                    }}
-                  >
-                    Submit Review
-                  </Button>
-                </div>
-              </Modal.Body>
-            </Modal.Dialog>
-          </Modal.Container>
-        </Modal.Backdrop>
-      </Modal>
+      <RatingModal
+        isRatingModalOpen={isRatingModalOpen}
+        setIsRatingModalOpen={setIsRatingModalOpen}
+        additionalData={{
+          taskId: task?._id,
+          freelancerName: task?.freelancerName,
+          freelancerEmail: task?.freelancerEmail,
+          clientEmail: task?.clientEmail,
+        }}
+      />
     </div>
   );
 }

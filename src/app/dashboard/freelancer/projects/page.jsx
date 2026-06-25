@@ -9,7 +9,6 @@ import { getUserSession } from "@/lib/core/session";
 export default async function ActiveProjectsPage() {
     const user=await getUserSession()
   const projects = await getActiveProjects(user?.email);
-    // console.log(projects)
   return (
     <div className="max-w-7xl mx-auto px-4 py-10">
       {/* Page Header */}
@@ -23,7 +22,7 @@ export default async function ActiveProjectsPage() {
       </div>
 
       {/* Passing data to Client Component for filtering and interaction */}
-      <ActiveProjectsClient initialProjects={projects} />
+      <ActiveProjectsClient initialProjects={projects} user={user} />
     </div>
   );
 }

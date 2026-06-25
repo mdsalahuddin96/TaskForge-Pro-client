@@ -51,16 +51,16 @@ export default function MyTasksClient({ tasks }) {
             </span>
           </Chip>
         );
-      case "closed":
+      case "completed":
         return (
           <Chip
-            color="default"
+            color="success"
             size="sm"
             variant="soft"
             className="font-bold border border-slate-200/20 capitalize"
           >
             <span className="flex items-center gap-1">
-              <FiXCircle className="text-xs" /> Complete
+              <FiCheckCircle className="text-xs" /> Complete
             </span>
           </Chip>
         );

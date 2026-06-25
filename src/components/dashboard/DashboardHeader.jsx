@@ -36,7 +36,7 @@ const DashboardHeader = ({user}) => {
         </Button>
 
         {/* Divider */}
-        <span className="h-5 w-[1px] bg-slate-200 dark:bg-slate-800" />
+        <span className="h-5 w-px bg-slate-200 dark:bg-slate-800" />
 
         {/* Logout button */}
         <button className="w-full flex items-center gap-3 px-4 py-3 text-sm font-medium text-danger cursor-pointer hover:bg-danger-50 dark:hover:bg-danger-950/20 rounded-xl transition-colors group">

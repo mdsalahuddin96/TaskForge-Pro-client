@@ -1,29 +1,38 @@
-// src/app/dashboard/freelancer/projects/ActiveProjectsClient.jsx
+
 "use client";
 
 import React, { useState } from "react";
 import { Tabs } from "@heroui/react";
 import { motion, AnimatePresence } from "framer-motion";
 import ProjectCard from "./ProjectCard";
+import { updateTask } from "@/lib/api/updateTask";
+import toast from "react-hot-toast";
+import { usePathname, useRouter } from "next/navigation";
+import { revalidateRoute } from "@/lib/actions/revalidateRoute";
 
-export default function ActiveProjectsClient({ initialProjects }) {
+
+export default function ActiveProjectsClient({ initialProjects, user }) {
+  const pathName = usePathname();
+  const router = useRouter();
   const [projects, setProjects] = useState(initialProjects);
   const [filter, setFilter] = useState("all");
+
   // Filter projects based on selected active tab id
   const filteredProjects = projects.filter((project) => {
-    const{task}=project
+    const { tasks } = project;
     if (filter === "all") return true;
-    return task?.status.toLowerCase() === filter.toLowerCase();
+    return tasks?.status.toLowerCase() === filter.toLowerCase();
   });
 
-  const handleDeliverableSubmit = (projectId, url) => {
-    setProjects((prev) =>
-      prev.map((p) =>
-        p._id === projectId
-          ? { ...p, status: "Completed", deliverable_url: url }
-          : p,
-      ),
-    );
+  const handleDeliverableSubmit = async (projectId, url) => {
+    const result = await updateTask(projectId, { deliverable_url: url, freelancerName:user?.name, freelancerEmail:user?.email });
+    if (result.modifiedCount > 0) {
+      await revalidateRoute(pathName);
+      router.refresh();
+      toast.success("Project Submitted Successfully!");
+    } else {
+      toast.error("Something wrong!");
+    }
   };
 
   return (
