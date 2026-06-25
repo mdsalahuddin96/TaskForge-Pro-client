@@ -19,6 +19,7 @@ import { GrTasks } from "react-icons/gr";
 import { CgProfile } from "react-icons/cg";
 import { Avatar } from "@heroui/react";
 import { MdDashboard } from "react-icons/md";
+import { BiSearch } from "react-icons/bi";
 const DashboardSidebar = ({ user }) => {
   const { isSidebarOpen, setIsSidebarOpen } = useContext(HamburgerContext);
   const pathname = usePathname();
@@ -42,6 +43,11 @@ const DashboardSidebar = ({ user }) => {
     ],
     Freelancer: [
       { text: "Overview", href: "/dashboard/freelancer", icon: MdDashboard },
+      {
+        text:"Browse Tasks",
+        href:"/browse-tasks",
+        icon: BiSearch,
+      },
       {
         text: "Proposals",
         href: "/dashboard/freelancer/proposals",
