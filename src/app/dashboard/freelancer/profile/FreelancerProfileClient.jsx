@@ -13,6 +13,7 @@ import {
   FiClock,
   FiCheckCircle,
 } from "react-icons/fi";
+import Link from "next/link";
 
 export default function FreelancerProfileClient({ profile }) {
   return (
@@ -94,12 +95,13 @@ export default function FreelancerProfileClient({ profile }) {
           </div>
 
           {/* Profile Action Trigger */}
-          <Button
-            className="w-full mt-6 bg-slate-900 dark:bg-white text-white dark:text-slate-900 font-bold text-xs rounded-xl shadow-sm hover:opacity-90 transition-opacity py-5"
+          <Link
+            href={"/dashboard/freelancer/profile/edit"}
+            className="w-full mt-6 bg-slate-900 dark:bg-white text-white dark:text-slate-900 font-bold text-xs rounded-xl shadow-sm hover:opacity-90 transition-opacity py-4"
             variant="solid"
           >
             Edit Profile
-          </Button>
+          </Link>
         </Card>
       </motion.div>
 

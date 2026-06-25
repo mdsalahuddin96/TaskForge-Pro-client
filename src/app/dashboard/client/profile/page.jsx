@@ -15,11 +15,8 @@ import {
 import { useSession } from "@/lib/auth-client";
 
 export default function ClientProfilePage() {
-  // Hardcoded client data based on your provided format
   const { data } = useSession();
-  //   const user=data?.user
   const clientData = data?.user;
-  //   console.log("user info",user);
 
   // Format the ISO date string to a readable format (e.g., June 18, 2026)
   const convertDate = (dateString) => {
@@ -110,15 +107,13 @@ export default function ClientProfilePage() {
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
               >
-                <Button
-                  as={Link}
+                <Link
                   href="/dashboard/client/profile/edit" // Your profile edit route path
-                  color="primary"
                   className="font-bold text-sm bg-indigo-600 text-white rounded-xl shadow-md shadow-indigo-600/10 px-5 py-2.5 flex items-center gap-2 group"
                 >
                   <FiEdit3 className="w-4 h-4 transition-transform group-hover:rotate-12" />
                   Edit Profile
-                </Button>
+                </Link>
               </motion.div>
             </div>
           </Card>
