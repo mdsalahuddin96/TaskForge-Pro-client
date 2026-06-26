@@ -1,8 +1,8 @@
 "use client";
 
-import React from "react";
-import { Input, Select, ListBox, Label, SearchField } from "@heroui/react";
-import { FiSearch, FiSliders } from "react-icons/fi";
+import React, { useEffect, useState } from "react";
+import { Select, ListBox, Label, SearchField, Button } from "@heroui/react";
+import { FiSliders, FiXCircle } from "react-icons/fi";
 import { useRouter, useSearchParams } from "next/navigation";
 export default function TaskFilter() {
   const router = useRouter();
@@ -10,6 +10,34 @@ export default function TaskFilter() {
   const [searchInp, setSearchInp] = useState(searchParams.get("search") || "");
   const [category, setCategory] = useState(searchParams.get("category") || "");
   const [budget, setBudget] = useState(searchParams.get("budget") || "");
+  const isFilterActive = searchInp || category || budget;
+  const categories = [
+    {
+      id: "All Category",
+      name: "All Category",
+    },
+    {
+      id: "Web Development",
+      name: "Web Development",
+    },
+    {
+      id: "Graphics Design",
+      name: "Graphics Design",
+    },
+    {
+      id: "Content Writing",
+      name: "Content Writing",
+    },
+    {
+      id: "UI/UX Design",
+      name: "UI/UX Design",
+    },
+    {
+      id: "Other",
+      name: "Other",
+    },
+  ];
+
   useEffect(() => {
     const timer = setTimeout(() => {
       const params = new URLSearchParams();
@@ -17,23 +45,17 @@ export default function TaskFilter() {
       if (searchInp) params.set("search", searchInp);
       if (category) params.set("category", category);
       if (budget) params.set("budget", budget);
-      console.log("searchInp",searchInp)
-      console.log("category",category)
-      console.log("budget",budget)
       router.push(`/browse-tasks?${params.toString()}`);
-    }, 500);
+    }, 1000);
 
     return () => clearTimeout(timer);
   }, [searchInp, category, budget, router]);
-
-  const categories = [
-    { id: "all_cat", name: "All Categories" },
-    { id: "web_dev", name: "Web Development" },
-    { id: "full_stack", name: "Full Stack Development" },
-    { id: "graphics", name: "Graphics Design" },
-    { id: "writing", name: "Content Writing" },
-    { id: "ui_ux", name: "UI/UX Design" },
-  ];
+  const handleClearFilters = () => {
+    setSearchInp("");
+    setCategory("");
+    setBudget("");
+    router.push("/browse-tasks"); 
+  };
 
   return (
     <div className="w-full bg-white dark:bg-slate-900 border border-slate-200/60 dark:border-slate-800/60 rounded-2xl p-5 shadow-sm space-y-5">
@@ -41,6 +63,18 @@ export default function TaskFilter() {
       <div className="flex items-center gap-2 font-bold text-slate-800 dark:text-slate-200 text-sm border-b border-slate-100 dark:border-slate-800 pb-3">
         <FiSliders className="text-indigo-600 w-4 h-4" />
         <span>Filter & Search</span>
+
+        {isFilterActive && (
+          <Button
+            size="sm"
+            variant="light"
+            onClick={handleClearFilters}
+            className="text-xs font-bold text-rose-500 hover:text-rose-600 dark:text-rose-400 dark:hover:text-rose-300 min-w-0 h-auto p-1 px-2 rounded-lg gap-1 hover:bg-rose-500/5 transition-all"
+          >
+            <FiXCircle className="w-3.5 h-3.5" />
+            Clear
+          </Button>
+        )}
       </div>
 
       {/* Search Input field */}
@@ -56,7 +90,7 @@ export default function TaskFilter() {
               placeholder="e.g., Landing page, Bug fix..."
               onChange={(e) => setSearchInp(e.target.value)}
             />
-            <SearchField.ClearButton />
+            <SearchField.ClearButton onClick={() => setSearchInp("")} />
           </SearchField.Group>
         </SearchField>
       </div>

@@ -7,14 +7,10 @@ import Link from "next/link";
 import { getTasks } from "@/lib/api/getTasks";
 import { deleteTask } from "@/lib/api/deleteTask";
 
-import { revalidateRoute } from "@/lib/actions/revalidateRoute";
-import { useRouter } from "next/navigation";
-
 export default function ManageTasks() {
   const [tasks, setTasks] = useState([]);
   const [loading, setLoading] = useState(true);
   const [actionLoadingId, setActionLoadingId] = useState(null);
-  const router = useRouter();
 
   useEffect(() => {
     const fetchAllTasks = async () => {
@@ -41,8 +37,6 @@ export default function ManageTasks() {
         setTasks((prevTasks) =>
           prevTasks.filter((task) => task._id !== taskId),
         );
-        // revalidateRoute("/dashboard/admin/tasks");
-        // router.refresh();
       }
       //
     } catch (error) {
@@ -52,21 +46,19 @@ export default function ManageTasks() {
     }
   };
 
-  // ৩. লাইভ স্ট্যাটাস ব্যাজ জেনারেটর
   const getStatusLabel = (status) => {
     const statusStyles = {
       open: "bg-indigo-500/5 border-indigo-500/20 text-indigo-500 dark:text-indigo-400",
       active:
         "bg-emerald-500/5 border-emerald-500/20 text-emerald-500 dark:text-emerald-400",
       completed: "bg-slate-500/10 border-slate-500/20 text-slate-500",
-      flagged: "bg-rose-500/5 border-rose-500/20 text-rose-500 animate-pulse",
+      "in-progress":"bg-rose-500/5 border-rose-500/20 text-rose-500 animate-pulse",
     };
 
     return (
       <span
         className={`inline-flex items-center text-[10px] font-extrabold uppercase tracking-wider px-2.5 py-0.5 rounded-md border ${statusStyles[status] || "bg-slate-100 text-slate-600"}`}
       >
-        {status === "flagged" && <FiAlertTriangle className="mr-1 w-3 h-3" />}
         {status}
       </span>
     );
@@ -171,7 +163,9 @@ export default function ManageTasks() {
                     </Table.Cell>
 
                     {/* Status Label */}
-                    <Table.Cell>{getStatusLabel(task?.status)}</Table.Cell>
+                    <Table.Cell>
+                      {getStatusLabel(task?.status.toLowerCase())}
+                    </Table.Cell>
 
                     {/* Actions Panel */}
                     <Table.Cell>

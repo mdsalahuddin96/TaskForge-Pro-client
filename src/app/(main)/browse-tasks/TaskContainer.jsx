@@ -10,6 +10,7 @@ import {
   FiArrowUpRight,
   FiBriefcase,
   FiCheckCircle,
+  FiInbox,
 } from "react-icons/fi";
 import { useRouter } from "next/navigation";
 
@@ -38,6 +39,22 @@ export default function TaskContainer({ tasks }) {
     router.push(`/browse-tasks/${id}`);
   };
 
+  if (!tasks || tasks.length === 0) {
+    return (
+      <div className="flex flex-col items-center justify-center text-center p-12 bg-white dark:bg-zinc-950 rounded-2xl border border-slate-200/60 dark:border-zinc-900/80 shadow-sm min-h-[400px]">
+        <div className="p-4 rounded-full bg-slate-50 dark:bg-zinc-900/50 text-slate-400 dark:text-zinc-600 mb-4 border border-slate-100 dark:border-zinc-900">
+          <FiInbox className="w-8 h-8" />
+        </div>
+        <h3 className="text-lg font-bold text-slate-900 dark:text-white tracking-tight">
+          No Tasks Found
+        </h3>
+        <p className="mt-1 text-sm text-slate-400 dark:text-zinc-500 max-w-sm font-medium">
+          We couldn&apos;t find any micro-tasks matching your exact search filters.
+          Try adjusting your category or budget limit.
+        </p>
+      </div>
+    );
+  }
   return (
     <motion.div
       variants={containerVariants}

@@ -8,6 +8,7 @@ import { getPaymentHistory } from "@/lib/api/getPaymentHistory";
 
 export default function TransactionsHistory() {
   const [transactions, setTransactions] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchTransactions = async () => {
@@ -26,6 +27,13 @@ export default function TransactionsHistory() {
     fetchTransactions();
   }, []);
 
+  if (loading) {
+    return (
+      <div className="min-h-[60vh] flex items-center justify-center">
+        <Spinner color="indigo" size="lg" label="Syncing Stripe Ledger Pipelines..." />
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6">

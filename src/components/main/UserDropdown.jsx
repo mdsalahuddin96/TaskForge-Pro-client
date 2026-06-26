@@ -1,8 +1,10 @@
+import { redirectTo } from "@/lib/actions/redirectTo";
 import { signOut } from "@/lib/auth-client";
 import { ArrowRightFromSquare } from "@gravity-ui/icons";
 import { Avatar, Dropdown, Label } from "@heroui/react";
 import Link from "next/link";
 import { BiSolidDashboard, BiUser } from "react-icons/bi";
+import { RiArrowDropDownLine } from "react-icons/ri";
 
 export function UserDropdown({ user }) {
   const roleBaseURL = {
@@ -17,6 +19,7 @@ export function UserDropdown({ user }) {
   };
   const handleSignout = async () => {
     await signOut();
+    redirectTo("/")
   };
   return (
     <Dropdown>
@@ -40,6 +43,7 @@ export function UserDropdown({ user }) {
                 {user?.name}
               </p>
             </div>
+            <RiArrowDropDownLine size={30}/>
           </div>
         </div>
       </Dropdown.Trigger>

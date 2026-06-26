@@ -1,11 +1,11 @@
 import React from "react";
 import TaskFilter from "./TaskFilter";
 import TaskContainer from "./TaskContainer";
-import { getTasks } from "@/lib/api/getTasks";
+import { getBrowseTask } from "@/lib/api/getBrowseTask";
 
-export default async function BrowseTasksPage() {
-  const tasksData = await getTasks();
-  const tasks=tasksData?.openTasks;
+export default async function BrowseTasksPage({searchParams}) {
+  const{search,category,budget}=await searchParams
+  const tasks=await getBrowseTask(search, category, budget)
   return (
     <div className="min-h-screen bg-slate-50/50 dark:bg-slate-950 px-4 py-10 sm:px-6 lg:px-8">
       <div className="max-w-7xl mx-auto">
