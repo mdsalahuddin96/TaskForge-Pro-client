@@ -1,10 +1,12 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { FiGrid, FiLoader, FiDollarSign, FiClock } from "react-icons/fi";
 import ClientTaskAnalytics from "@/components/dashboard/ClientTaskAnalytics";
 import ClientRecentTasks from "@/components/dashboard/ClientRecentTasks";
+import { useSession } from "@/lib/auth-client";
+import { getClientDashboardState } from "@/lib/api/getClientDasboardState";
 
 export default function ClientOverview() {
   const stats = [
@@ -15,6 +17,7 @@ export default function ClientOverview() {
       icon: FiGrid,
       color: "text-indigo-500",
       bg: "bg-indigo-50 dark:bg-indigo-950/30",
+      name: "totalTasks",
     },
     {
       id: 2,
@@ -23,6 +26,7 @@ export default function ClientOverview() {
       icon: FiClock,
       color: "text-amber-500",
       bg: "bg-amber-50 dark:bg-amber-950/30",
+      name: "openTasks",
     },
     {
       id: 3,
@@ -31,6 +35,7 @@ export default function ClientOverview() {
       icon: FiLoader,
       color: "text-sky-500",
       bg: "bg-sky-50 dark:bg-sky-950/30",
+      name: "inProgressTasks",
     },
     {
       id: 4,
@@ -39,9 +44,20 @@ export default function ClientOverview() {
       icon: FiDollarSign,
       color: "text-emerald-500",
       bg: "bg-emerald-50 dark:bg-emerald-950/30",
+      name: "totalSpent",
     },
   ];
-
+  const [statData, setStatData] = useState([]);
+  const { data } = useSession();
+  const user = data?.user;
+  useEffect(() => {
+    const fetchData = async () => {
+      const result = await getClientDashboardState(user?.email);
+      setStatData(result);
+      console.log(result);
+    };
+    fetchData();
+  }, [user]);
   return (
     <motion.div
       initial={{ opacity: 0, y: 10 }}
@@ -76,7 +92,7 @@ export default function ClientOverview() {
                   {stat.label}
                 </span>
                 <span className="text-2xl font-black text-slate-900 dark:text-white block">
-                  {stat.value}
+                  {statData[stat.name]}
                 </span>
               </div>
               <div
@@ -89,10 +105,10 @@ export default function ClientOverview() {
         })}
       </div>
       <div className="grid md:grid-cols-2 gap-4">
-        {/*  Graph Analytics Section Component */}
-        <ClientTaskAnalytics />
         {/* Recent Active Tasks Table Component */}
         <ClientRecentTasks />
+        {/*  Graph Analytics Section Component */}
+        <ClientTaskAnalytics />
       </div>
     </motion.div>
   );

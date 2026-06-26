@@ -8,22 +8,9 @@ import { FiArrowLeft, FiStar, FiDollarSign, FiMail, FiCalendar, FiCheckCircle } 
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 
-// Mock Data: সিঙ্গেল ফ্রিল্যান্সার অবজেক্ট (আপনার দেওয়া ডেটা ফরম্যাট)
-const freelancer = {
-  _id: "6a33c89d0529fee81186412c",
-  name: "MD SALAH UDDIN",
-  email: "sala@freelencer.com",
-  image: "https://png.pngtree.com/png-vector/20190710/ourmid/pngtree-user-vector-avatar-png-image_1541962.jpg",
-  role: "Freelancer",
-  skills: ["JavaScript", "React", "TailwindCSS", "Next.js"],
-  bio: "I am best web developer. I build modern scalable website.",
-  hourlyRate: 15,
-  averageRating: 5,
-  totalReviews: 1,
-  createdAt: "2026-06-18"
-};
 
-export default function DetailsInfo() {
+
+export default function DetailsInfo({freelancer}) {
   const router = useRouter();
 
   return (
@@ -57,8 +44,10 @@ export default function DetailsInfo() {
                 {/* Avatar frame */}
                 <div className="relative">
                   <Image 
-                    src={freelancer.image} 
-                    alt={freelancer.name} 
+                    src={freelancer?.image} 
+                    alt={freelancer?.name} 
+                    width={300}
+                    height={300}
                     className="w-24 h-24 rounded-full border-2 border-slate-200 dark:border-zinc-800 bg-slate-100 object-cover shadow-inner"
                   />
                   <div className="absolute bottom-1 right-1 bg-indigo-500 text-white p-1 rounded-full border-2 border-white dark:border-zinc-950">
@@ -69,13 +58,13 @@ export default function DetailsInfo() {
                 {/* Identity info */}
                 <div className="space-y-1">
                   <Card.Title className="text-2xl font-black tracking-tight text-slate-900 dark:text-zinc-100">
-                    {freelancer.name}
+                    {freelancer?.name}
                   </Card.Title>
                   <Card.Description className="text-xs font-black text-indigo-600 dark:text-indigo-400 uppercase tracking-widest block">
-                    {freelancer.role}
+                    {freelancer?.role}
                   </Card.Description>
                   <p className="flex items-center justify-center sm:justify-start gap-1.5 text-xs font-semibold text-slate-400 dark:text-zinc-500">
-                    <FiMail className="w-3.5 h-3.5" /> {freelancer.email}
+                    <FiMail className="w-3.5 h-3.5" /> {freelancer?.email}
                   </p>
                 </div>
               </div>
@@ -83,7 +72,7 @@ export default function DetailsInfo() {
               {/* Rating Summary Grid box */}
               <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-amber-500/5 border border-amber-500/20 text-amber-500 text-sm font-black shrink-0">
                 <FiStar className="fill-current w-4 h-4" />
-                <span>{freelancer.averageRating.toFixed(1)}</span>
+                <span>{freelancer?.averageRating?freelancer.averageRating.toFixed(1):0}</span>
                 <span className="text-xs font-bold text-slate-400 dark:text-zinc-500">({freelancer.totalReviews} review)</span>
               </div>
             </Card.Header>
@@ -107,7 +96,7 @@ export default function DetailsInfo() {
                   Core Expertise
                 </h3>
                 <div className="flex flex-wrap gap-2">
-                  {freelancer.skills.map((skill, index) => (
+                  {freelancer?.skills.map((skill, index) => (
                     <span 
                       key={index} 
                       className="text-xs font-bold px-3 py-1 rounded-xl bg-slate-100 dark:bg-zinc-900 border border-slate-200/50 dark:border-zinc-800 text-slate-700 dark:text-zinc-300 shadow-sm"
@@ -129,7 +118,7 @@ export default function DetailsInfo() {
                 <div>
                   <span className="text-[10px] font-bold text-slate-400 dark:text-zinc-500 uppercase tracking-widest block">Hourly Rate</span>
                   <span className="text-xl font-black text-slate-800 dark:text-zinc-100">
-                    ${freelancer.hourlyRate}<span className="text-xs font-bold text-slate-400"> / hr</span>
+                    ${freelancer?.hourlyRate}<span className="text-xs font-bold text-slate-400"> / hr</span>
                   </span>
                 </div>
               </div>
@@ -140,7 +129,7 @@ export default function DetailsInfo() {
                   <span className="text-[10px] font-bold text-slate-400 dark:text-zinc-500 uppercase tracking-widest block">Member Since</span>
                   <span className="text-xs font-bold text-slate-500 dark:text-zinc-400 flex items-center gap-1 mt-0.5 justify-end">
                     <FiCalendar className="w-3.5 h-3.5" />
-                    {new Date(freelancer.createdAt).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
+                    {new Date(freelancer?.createdAt).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
                   </span>
                 </div>
               </div>

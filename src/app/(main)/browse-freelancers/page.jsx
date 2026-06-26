@@ -14,6 +14,7 @@ import {
 } from "react-icons/fi";
 import { getAllFreelancer } from "@/lib/api/getAllFreelancer";
 import Image from "next/image";
+import Link from "next/link";
 
 export default function BrowseFreelancers() {
   const [searchQuery, setSearchQuery] = useState("");
@@ -203,15 +204,13 @@ export default function BrowseFreelancers() {
                       </span>
                     </div>
 
-                    <button
-                      onClick={() =>
-                        console.log(`Viewing profile of: ${freelancer._id}`)
-                      }
+                    <Link
+                      href={`/browse-freelancers/${freelancer?._id}`}
                       className="inline-flex items-center gap-1.5 px-4 py-2 text-xs font-black uppercase tracking-wider rounded-xl bg-slate-100 hover:bg-indigo-600 dark:bg-zinc-900 dark:hover:bg-indigo-600 text-slate-700 hover:text-white dark:text-zinc-300 dark:hover:text-white transition-all shadow-sm group/btn"
                     >
                       View Profile
                       <FiArrowRight className="w-3.5 h-3.5 transform group-hover/btn:translate-x-0.5 transition-transform" />
-                    </button>
+                    </Link>
                   </Card.Footer>
                 </Card>
               </motion.div>

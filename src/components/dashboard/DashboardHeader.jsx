@@ -1,11 +1,18 @@
 "use client";
+import { redirectTo } from "@/lib/actions/redirectTo";
+import { signOut } from "@/lib/auth-client";
 import { HamburgerContext } from "@/providers/HamburgerContextProvider";
 import { Button } from "@heroui/react";
+
 import React, { useContext } from "react";
 import { FiBell, FiLogOut, FiMenu } from "react-icons/fi";
 
 const DashboardHeader = ({user}) => {
   const { setIsSidebarOpen } = useContext(HamburgerContext);
+  const handleLogout=async()=>{
+    await signOut()
+    redirectTo("/")
+  }
   return (
     <header className="sticky top-0 z-30 h-16 bg-white/70 backdrop-blur-md border-b border-slate-200/50 dark:bg-slate-900/75 dark:border-slate-800/50 flex items-center justify-between px-6">
       {/* লেফট সাইড: হ্যামবার্গার (মোবাইলের জন্য) এবং টাইটেল */}
@@ -39,7 +46,7 @@ const DashboardHeader = ({user}) => {
         <span className="h-5 w-px bg-slate-200 dark:bg-slate-800" />
 
         {/* Logout button */}
-        <button className="w-full flex items-center gap-3 px-4 py-3 text-sm font-medium text-danger cursor-pointer hover:bg-danger-50 dark:hover:bg-danger-950/20 rounded-xl transition-colors group">
+        <button onClick={handleLogout} className="w-full flex items-center gap-3 px-4 py-3 text-sm font-medium text-danger cursor-pointer hover:bg-danger-50 dark:hover:bg-danger-950/20 rounded-xl transition-colors group">
           <FiLogOut className="w-5 h-5 text-danger transition-transform group-hover:-translate-x-0.5" />
           Logout
         </button>

@@ -4,7 +4,7 @@ import React from "react";
 import { Button } from "@heroui/react";
 import { motion } from "framer-motion";
 import { FiPlusCircle, FiSearch, FiArrowRight } from "react-icons/fi";
-import { useSession } from "@/lib/auth-client";
+import Link from "next/link";
 
 export default function Hero({ user }) {
   const containerVariants = {
@@ -110,33 +110,25 @@ export default function Hero({ user }) {
           className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4 w-full sm:w-auto"
         >
           {/* Post a Task Button (Client) */}
-
-          <Button
-            size="lg"
-            className="w-full sm:w-auto px-8 py-6 bg-gradient-to-r from-indigo-600 via-purple-600 to-violet-600 text-white font-bold rounded-xl shadow-lg shadow-indigo-600/15 hover:from-indigo-700 hover:to-violet-700 hover:scale-105 transition duration-300 flex items-center justify-center gap-2"
-          >
-            {user?.role.toLowerCase() === "client" ? (
-              <>
-                {" "}
-                <FiPlusCircle className="w-5 h-5" />
-                <span>Post a Task</span>
-              </>
-            ) : (
-              <>
-                <FiSearch className="w-5 h-5" />
-                <span>Browse Tasks</span>
-              </>
-            )}
-          </Button>
-
-          {/* Browse Tasks Button (Freelancer)
-          {user?.role.toLowerCase() === "freelancer" && (
-            <Button
+          {user?.role.toLowerCase() === "client" ? (
+            <Link
+              href={"/dashboard/client/post-task"}
               size="lg"
-              variant="bordered"
-              className="w-full sm:w-auto px-8 py-6 border-2 border-slate-200 dark:border-slate-800 font-bold rounded-xl text-slate-700 dark:text-slate-300 hover:bg-slate-50 hover:scale-105 dark:hover:bg-slate-900 transition duration-300 flex items-center justify-center gap-2"
-            ></Button>
-          )} */}
+              className="w-full sm:w-auto px-8 py-4 bg-gradient-to-r from-indigo-600 via-purple-600 to-violet-600 text-white font-bold rounded-xl shadow-lg shadow-indigo-600/15 hover:from-indigo-700 hover:to-violet-700 hover:scale-105 transition duration-300 flex items-center justify-center gap-2"
+            >
+              <FiPlusCircle className="w-5 h-5" />
+              <span>Post a Task</span>
+            </Link>
+          ) : (
+            <Link
+              href={"/browse-tasks"}
+              size="lg"
+              className="w-full sm:w-auto px-8 py-4 bg-gradient-to-r from-indigo-600 via-purple-600 to-violet-600 text-white font-bold rounded-xl shadow-lg shadow-indigo-600/15 hover:from-indigo-700 hover:to-violet-700 hover:scale-105 transition duration-300 flex items-center justify-center gap-2"
+            >
+              <FiSearch className="w-5 h-5" />
+              <span>Browse Tasks</span>
+            </Link>
+          )}
         </motion.div>
       </motion.div>
     </section>
