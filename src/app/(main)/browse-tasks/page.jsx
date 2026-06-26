@@ -4,7 +4,8 @@ import TaskContainer from "./TaskContainer";
 import { getTasks } from "@/lib/api/getTasks";
 
 export default async function BrowseTasksPage() {
-  const tasks = await getTasks();
+  const tasksData = await getTasks();
+  const tasks=tasksData?.openTasks;
   return (
     <div className="min-h-screen bg-slate-50/50 dark:bg-slate-950 px-4 py-10 sm:px-6 lg:px-8">
       <div className="max-w-7xl mx-auto">

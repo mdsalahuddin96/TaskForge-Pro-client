@@ -3,8 +3,8 @@
 import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { FiGrid, FiLoader, FiDollarSign, FiClock } from "react-icons/fi";
-import ClientTaskAnalytics from "@/components/dashboard/ClientTaskAnalytics";
-import ClientRecentTasks from "@/components/dashboard/ClientRecentTasks";
+import ClientTaskAnalytics from "@/components/dashboard/client/ClientTaskAnalytics";
+import ClientRecentTasks from "@/components/dashboard/client/ClientRecentTasks";
 import { useSession } from "@/lib/auth-client";
 import { getClientDashboardState } from "@/lib/api/getClientDasboardState";
 

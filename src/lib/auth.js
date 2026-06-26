@@ -29,10 +29,12 @@ export const auth = betterAuth({
         input: true,
       },
       isBlocked: {
-        default: false,
+        type: "boolean",
+        required: false,
+        defaultValue: false,
       },
       skills: {
-        type: "string", 
+        type: "string",
         required: false,
       },
       bio: {
@@ -46,9 +48,8 @@ export const auth = betterAuth({
       averageRating: {
         type: "number",
         required: false,
-        default:0
+        default: 0,
       },
     },
   },
-
 });

@@ -41,7 +41,6 @@ export default function LoginPage() {
       if (data) {
         toast.success("Logged in successfully!");
         const role = data?.user?.role;
-        console.log(data)
         handleRoleRedirect(role);
       }
       if(error){

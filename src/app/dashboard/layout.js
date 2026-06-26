@@ -1,6 +1,6 @@
 import DashboardHeader from "@/components/dashboard/DashboardHeader";
 import DashboardSidebar from "@/components/dashboard/DashboardSidebar";
-import { getUserSession } from "@/lib/core/session";
+import { getUserSession, requiredRole } from "@/lib/core/session";
 import HamburgerContextProvider from "@/providers/HamburgerContextProvider";
 
 export default async function DashboardLayout({ children }) {

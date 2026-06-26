@@ -3,8 +3,29 @@
 import React from "react";
 import { Input, Select, ListBox, Label, SearchField } from "@heroui/react";
 import { FiSearch, FiSliders } from "react-icons/fi";
-
+import { useRouter, useSearchParams } from "next/navigation";
 export default function TaskFilter() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const [searchInp, setSearchInp] = useState(searchParams.get("search") || "");
+  const [category, setCategory] = useState(searchParams.get("category") || "");
+  const [budget, setBudget] = useState(searchParams.get("budget") || "");
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      const params = new URLSearchParams();
+
+      if (searchInp) params.set("search", searchInp);
+      if (category) params.set("category", category);
+      if (budget) params.set("budget", budget);
+      console.log("searchInp",searchInp)
+      console.log("category",category)
+      console.log("budget",budget)
+      router.push(`/browse-tasks?${params.toString()}`);
+    }, 500);
+
+    return () => clearTimeout(timer);
+  }, [searchInp, category, budget, router]);
+
   const categories = [
     { id: "all_cat", name: "All Categories" },
     { id: "web_dev", name: "Web Development" },
@@ -24,13 +45,17 @@ export default function TaskFilter() {
 
       {/* Search Input field */}
       <div className="space-y-1.5">
-        <SearchField name="search">
+        <SearchField name="search" value={searchInp}>
           <Label className="text-xs font-bold text-slate-400 uppercase tracking-wider">
             Search Keyword
           </Label>
           <SearchField.Group>
             <SearchField.SearchIcon />
-            <SearchField.Input className="w-full" placeholder="e.g., Landing page, Bug fix..." />
+            <SearchField.Input
+              className="w-full"
+              placeholder="e.g., Landing page, Bug fix..."
+              onChange={(e) => setSearchInp(e.target.value)}
+            />
             <SearchField.ClearButton />
           </SearchField.Group>
         </SearchField>
@@ -38,7 +63,12 @@ export default function TaskFilter() {
 
       {/* Category Dropdown*/}
       <div className="space-y-1.5 flex flex-col">
-        <Select className="w-full" placeholder="Select Category">
+        <Select
+          className="w-full"
+          placeholder="Select Category"
+          value={category}
+          onChange={(value) => setCategory(value)}
+        >
           <Label className="text-xs font-bold text-slate-400 uppercase tracking-wider">
             Category
           </Label>
@@ -61,7 +91,12 @@ export default function TaskFilter() {
 
       {/* Budget Dropdown*/}
       <div className="space-y-1.5 flex flex-col">
-        <Select className="w-full" placeholder="All Budgets">
+        <Select
+          className="w-full"
+          placeholder="All Budgets"
+          value={budget}
+          onChange={(value) => setBudget(value)}
+        >
           <Label className="text-xs font-bold text-slate-400 uppercase tracking-wider">
             Budget Range
           </Label>

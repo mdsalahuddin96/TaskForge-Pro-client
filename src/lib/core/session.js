@@ -12,7 +12,10 @@ export const getUserSession=async()=>{
 
 export const requiredRole=async(role)=>{
     const user=await getUserSession()
+    if(!user){
+        redirect("/unauthorized")
+    }
     if(user.role.toLowerCase()!==role.toLowerCase()){
-        redirect("/")
+        redirect("/forbidden")
     }
 }

@@ -1,4 +1,4 @@
-// src/app/browse-freelancers/page.jsx
+
 "use client";
 
 import React, { useState, useMemo, useEffect } from "react";
@@ -54,7 +54,6 @@ export default function BrowseFreelancers() {
     show: { opacity: 1, y: 0, transition: { type: "spring", stiffness: 110 } },
     exit: { opacity: 0, scale: 0.95, transition: { duration: 0.2 } },
   };
-  console.log(freelancers);
   return (
     <div className="min-h-screen bg-slate-50 dark:bg-black text-slate-900 dark:text-slate-100 pb-20 selection:bg-indigo-500/30">
       {/* ─── HEADER SECTION ─── */}
