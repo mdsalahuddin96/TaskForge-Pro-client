@@ -33,10 +33,10 @@ import { revalidateRoute } from "@/lib/actions/revalidateRoute";
 import { redirectTo } from "@/lib/actions/redirectTo";
 import { signOut } from "@/lib/auth-client";
 
-export default function TaskDetails({ task, similarTasks, user, proposal }) {
+export default function TaskDetails({ task, similarTasks, user, applied }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [pending, setPending] = useState(false);
-  const [isApplied, setIsApplied] = useState(proposal); //use for check is already applied
+  const [isApplied, setIsApplied] = useState(applied); //use for check is already applied
   const pathName = usePathname();
   const router = useRouter();
 
@@ -179,9 +179,7 @@ export default function TaskDetails({ task, similarTasks, user, proposal }) {
                 <div className="flex items-center gap-3">
                   <Avatar>
                     <Avatar.Image
-                      imgprops={{
-                        referrerPolicy: "no-referrer",
-                      }}
+                      referrerPolicy= "no-referrer"
                       alt={task?.clientName}
                       src={task?.clientImage}
                       width={200}
@@ -261,7 +259,7 @@ export default function TaskDetails({ task, similarTasks, user, proposal }) {
                   </span>
                 </div>
               </div>
-              {user?.role === "Client" ? (
+              {user?.role !== "Freelancer" ? (
                 <button
                   onClick={async () => {
                     await signOut();

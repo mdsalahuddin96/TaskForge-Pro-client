@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import {
   Button,
@@ -14,22 +14,26 @@ import toast from "react-hot-toast";
 import Link from "next/link";
 import { FormSubmitBtn } from "@/components/main/FormSubmitBtn";
 import { FcGoogle } from "react-icons/fc";
-import { authClient } from "@/lib/auth-client";
+import { authClient, useSession } from "@/lib/auth-client";
+import { redirectTo } from "@/lib/actions/redirectTo";
 
 export default function LoginPage() {
   const [isVisible, setIsVisible] = useState(false);
   const router = useRouter();
 
   const toggleVisibility = () => setIsVisible(!isVisible);
-
+ 
   // Dynamically Redirect according to role
   const handleRoleRedirect = (role) => {
     if (role.toLowerCase() === "client") {
-      router.push("/dashboard/client"); 
+      router.push("/dashboard/client")
+      router.refresh();
     } else if (role.toLowerCase() === "freelancer") {
-      router.push("/dashboard/freelancer"); 
-    } else {
-      router.push("/dashboard/admin"); 
+      redirectTo("/dashboard/freelancer");
+      router.refresh();
+    } else if (role.toLowerCase() === "admin") {
+      redirectTo("/dashboard/admin");
+      router.refresh();
     }
   };
 
@@ -43,8 +47,8 @@ export default function LoginPage() {
         const role = data?.user?.role;
         handleRoleRedirect(role);
       }
-      if(error){
-        toast.error(error.message)
+      if (error) {
+        toast.error(error.message);
       }
     } catch (error) {
       console.error("Login Error:", error);
@@ -79,7 +83,7 @@ export default function LoginPage() {
           onPress={handleGoogleLogin}
         >
           <FcGoogle />
-          Continue with Google
+          Continue with Google (as Client)
         </Button>
 
         {/* Divider */}

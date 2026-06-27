@@ -38,7 +38,6 @@ export default function RatingModal({
       reviewee_email: revieweeEmail,
       reviewer_email: reviewerEmail,
     };
-    console.log("review ",reviewPayload)
     const result = await saveReview(reviewPayload);
     if (result.insertedId) {
       toast.success("Thank you for your feedback!");

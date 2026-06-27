@@ -18,13 +18,14 @@ export default async function TaskDetailsPage({ params }) {
   const user=await getUserSession()
   const task = await getTaskDetails(id)
   const similarTasks = await getSimilarTasks(task.category);
-  const proposal=await getProposal(id,user?.email)
+  const proposal=await getProposal(id, user?.email)
+  const applied=proposal?._id?true:false;
   return (
     <TaskDetails 
       task={task} 
       similarTasks={similarTasks} 
       user={user}
-      proposal={proposal}
+      applied={applied}
     />
   );
 }

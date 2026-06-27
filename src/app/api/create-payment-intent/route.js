@@ -1,5 +1,4 @@
-import { getUserSession } from "@/lib/core/session";
-import { metadata } from "motion/react-client";
+
 import { NextResponse } from "next/server";
 import Stripe from "stripe";
 
