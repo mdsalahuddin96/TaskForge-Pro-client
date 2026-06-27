@@ -17,7 +17,6 @@ import { revalidateRoute } from "@/lib/actions/revalidateRoute";
 
 
 export default function ProposalsTable({ proposals }) {
-  console.log(proposals)
   const pathName=usePathname()
   const router=useRouter()
   // Generate chip according to status
@@ -75,9 +74,6 @@ export default function ProposalsTable({ proposals }) {
     }
   };
 
-  const handleEditTask = (task) => {
-    toast.success(`Editing proposal for: ${task?.title?.slice(0, 20)}...`);
-  };
 
   const handleProposalDelete =async (id) => {
     const result=await deleteProposal(id)
@@ -105,7 +101,7 @@ export default function ProposalsTable({ proposals }) {
           </p>
         </div>
 
-        {/* কাউন্টার ব্যাজ */}
+        {/* Counter Badge*/}
         <div className="self-start sm:self-center text-xs font-bold text-slate-500 bg-slate-50 dark:bg-slate-800 px-3 py-1.5 rounded-xl border border-slate-100 dark:border-slate-700/50">
           Total Applications:{" "}
           <span className="text-indigo-600 dark:text-indigo-400">

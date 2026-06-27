@@ -1,6 +1,6 @@
-import { serverFetch } from "../core/server"
+import { protectedFetch, serverFetch } from "../core/server"
 
 export const getUser=async(id)=>{
     const path=`/api/user/${id}`
-    return serverFetch(path)
+    return protectedFetch(path)
 }

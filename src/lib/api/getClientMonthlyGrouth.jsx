@@ -1,4 +1,4 @@
-import { serverFetch } from "../core/server"
+import { protectedFetch, serverFetch } from "../core/server"
 export const getClientMonthlyGrouth=async(id)=>{
-    return serverFetch(`/api/monthly-growth/${id}`)
+    return protectedFetch(`/api/monthly-growth/${id}`)
 }

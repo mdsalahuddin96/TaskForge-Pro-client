@@ -14,7 +14,8 @@ export default function ClientRecentTasks() {
   useEffect(() => {
     const fetchTask = async () => {
       const tasks = await getTasks(user?.id);
-      setTasks(tasks.slice(0,5));
+      const safeTasks = Array.isArray(tasks) ? tasks : [];
+      setTasks(safeTasks.slice(0,5));
     };
     fetchTask();
   }, [user]);

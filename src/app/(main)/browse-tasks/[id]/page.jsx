@@ -19,7 +19,6 @@ export default async function TaskDetailsPage({ params }) {
   const task = await getTaskDetails(id)
   const similarTasks = await getSimilarTasks(task.category);
   const proposal=await getProposal(id,user?.email)
-  
   return (
     <TaskDetails 
       task={task} 

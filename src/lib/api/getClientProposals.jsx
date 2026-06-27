@@ -1,5 +1,5 @@
-import { serverFetch } from "../core/server"
+import { protectedFetch, serverFetch } from "../core/server"
 
 export const getClientProposals=async()=>{
-    return serverFetch(`/api/client/proposals`)
+    return protectedFetch(`/api/client/proposals`)
 }

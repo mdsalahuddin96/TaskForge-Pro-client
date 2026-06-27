@@ -1,4 +1,4 @@
-import { serverFetch } from "../core/server"
+import { protectedFetch, serverFetch } from "../core/server"
 export const getClientDashboardState=async(email)=>{
-    return serverFetch(`/api/client-dashboard-stats?clientEmail=${email}`)
+    return protectedFetch(`/api/client-dashboard-stats?clientEmail=${email}`)
 }

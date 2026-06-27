@@ -1,5 +1,5 @@
-import { serverFetch } from "../core/server"
+import { protectedFetch, serverFetch } from "../core/server"
 
 export const getActiveProjects=async(email)=>{
-    return serverFetch(`/api/active/projects?freelancerEmail=${email}`)
+    return protectedFetch(`/api/active/projects?freelancerEmail=${email}`)
 }

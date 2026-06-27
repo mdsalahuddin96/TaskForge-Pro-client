@@ -30,15 +30,15 @@ import { postProposal } from "@/lib/actions/postProposal";
 import { LuCircleCheckBig } from "react-icons/lu";
 import { usePathname, useRouter } from "next/navigation";
 import { revalidateRoute } from "@/lib/actions/revalidateRoute";
-
-
+import { redirectTo } from "@/lib/actions/redirectTo";
+import { signOut } from "@/lib/auth-client";
 
 export default function TaskDetails({ task, similarTasks, user, proposal }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [pending, setPending] = useState(false);
-  const [isApplied, setIsApplied] = useState(proposal); //use for check is already applied 
-  const pathName=usePathname()
-  const router=useRouter()
+  const [isApplied, setIsApplied] = useState(proposal); //use for check is already applied
+  const pathName = usePathname();
+  const router = useRouter();
 
   const getDaysLeft = (deadlineStr) => {
     const diff = new Date(deadlineStr) - new Date();
@@ -52,18 +52,18 @@ export default function TaskDetails({ task, similarTasks, user, proposal }) {
     const formData = new FormData(e.currentTarget);
     const proposedData = Object.fromEntries(formData.entries());
     proposedData.taskId = task?._id;
-    proposedData.taskTitle=task?.title;
+    proposedData.taskTitle = task?.title;
     proposedData.freelancerEmail = user?.email;
-    proposedData.freelancerName=user?.name;
+    proposedData.freelancerName = user?.name;
     proposedData.status = "pending";
     const result = await postProposal(proposedData);
     if (result.insertedId) {
       toast.success("Proposal Submitted Successfully");
       setPending(false);
       setIsModalOpen(false);
-      await revalidateRoute(pathName)
-      router.push(pathName)
-      router.refresh()
+      setIsApplied(true)
+      await revalidateRoute(pathName);
+      router.refresh();
     }
   };
 
@@ -261,24 +261,36 @@ export default function TaskDetails({ task, similarTasks, user, proposal }) {
                   </span>
                 </div>
               </div>
-
-              <button
-                onClick={() => setIsModalOpen(true)}
-                className="w-full bg-gradient-to-r from-indigo-600 via-purple-600 to-violet-600 text-white font-bold rounded-xl py-3.5 shadow-md hover:from-indigo-700 hover:to-violet-700 transition flex items-center justify-center gap-2 group"
-                disabled={isApplied}
-              >
-                {isApplied ? (
-                  <>
-                    <LuCircleCheckBig className="w-4 h-4" />
-                    <span>Already Applied</span>
-                  </>
-                ) : (
-                  <>
-                    <FiSend className="w-4 h-4 transition-transform group-hover:translate-x-1 group-hover:-translate-y-0.5" />
-                    <span>Submit Proposal</span>
-                  </>
-                )}
-              </button>
+              {user?.role === "Client" ? (
+                <button
+                  onClick={async () => {
+                    await signOut();
+                    redirectTo("/login");
+                  }}
+                  className="w-full bg-gradient-to-r from-indigo-600 via-purple-600 to-violet-600 text-white font-bold rounded-xl py-3.5 shadow-md hover:from-indigo-700 hover:to-violet-700 transition flex items-center justify-center gap-2 group"
+                  disabled={isApplied}
+                >
+                  For Apply Login as Freelancer
+                </button>
+              ) : (
+                <button
+                  onClick={() => setIsModalOpen(true)}
+                  className="w-full bg-gradient-to-r from-indigo-600 via-purple-600 to-violet-600 text-white font-bold rounded-xl py-3.5 shadow-md hover:from-indigo-700 hover:to-violet-700 transition flex items-center justify-center gap-2 group"
+                  disabled={isApplied}
+                >
+                  {isApplied ? (
+                    <>
+                      <LuCircleCheckBig className="w-4 h-4" />
+                      <span>Already Applied</span>
+                    </>
+                  ) : (
+                    <>
+                      <FiSend className="w-4 h-4 transition-transform group-hover:translate-x-1 group-hover:-translate-y-0.5" />
+                      <span>Submit Proposal</span>
+                    </>
+                  )}
+                </button>
+              )}
             </motion.div>
           </div>
         </div>

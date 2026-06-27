@@ -12,7 +12,6 @@ import { useSession } from "@/lib/auth-client";
 export default function FreelancerOverview() {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
-  const freelancerEmail = "sala@freelencer.com"; // অথেনটিকেশন বা সেশন অবজেক্ট থেকে আসবে
 const {data:user}=useSession()
 const freelancer=user?.user
   useEffect(() => {

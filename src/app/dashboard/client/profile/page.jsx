@@ -1,9 +1,8 @@
 "use client";
 
-import React, { useEffect } from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { Card, Avatar, Button, Chip } from "@heroui/react";
+import { Card, Avatar, Chip } from "@heroui/react";
 import {
   FiMail,
   FiCalendar,
