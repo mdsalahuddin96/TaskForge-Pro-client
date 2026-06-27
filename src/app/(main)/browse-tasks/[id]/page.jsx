@@ -4,7 +4,7 @@ import { getTaskDetails } from "@/lib/api/getTaskDetails";
 import { getProposal } from "@/lib/api/getProposal";
 import { getUserSession } from "@/lib/core/session";
 
-// সিমিলার টাস্ক ফেচ করার ফাংশন
+// similar Task
 async function getSimilarTasks(category) {
   return [
     { id: "s1", title: "Build modern layout portfolio using Next.js & Tailwind CSS", category: "Web Development", budget: 80, deadline: "2026-06-30" },

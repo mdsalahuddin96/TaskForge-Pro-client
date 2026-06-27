@@ -43,7 +43,7 @@ export function UserDropdown({ user }) {
                 {user?.name}
               </p>
             </div>
-            <RiArrowDropDownLine size={30}/>
+            <RiArrowDropDownLine size={30} className="text-slate-700"/>
           </div>
         </div>
       </Dropdown.Trigger>
