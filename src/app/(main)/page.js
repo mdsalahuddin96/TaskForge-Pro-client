@@ -1,4 +1,3 @@
-
 import FeaturedTasks from "@/components/main/FeaturedTask";
 import Hero from "@/components/main/Hero";
 import HowItWorks from "@/components/main/HowItWorks";
@@ -11,10 +10,10 @@ export default async function Home() {
   return (
     <div>
       <Hero user={user} />
-      <PlatformStatistics/>
-      <FeaturedTasks/>
-      <HowItWorks/>
-      <PlatformTestimonial/>
+      <PlatformStatistics />
+      <FeaturedTasks />
+      <HowItWorks />
+      <PlatformTestimonial />
     </div>
   );
 }

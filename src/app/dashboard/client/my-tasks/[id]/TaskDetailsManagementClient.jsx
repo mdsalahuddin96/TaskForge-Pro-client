@@ -46,9 +46,9 @@ export default function TaskDetailsManagementClient({ taskData }) {
   const handleTaskDelete = async () => {
     const result = await deleteTask(task?._id);
     if (result.deletedCount > 0) {
-      toast.error("Post has been Deleted!");
-      router.push("/dashboard/client/my-tasks");
+      router.replace("/dashboard/client/my-tasks");
       router.refresh();
+      toast.error("Post has been Deleted!");
     } else {
       toast.error("Post not deleted");
     }

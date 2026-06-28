@@ -1,12 +1,9 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { FiGrid, FiLoader, FiDollarSign, FiClock } from "react-icons/fi";
 import ClientTaskAnalytics from "@/components/dashboard/client/ClientTaskAnalytics";
 import ClientRecentTasks from "@/components/dashboard/client/ClientRecentTasks";
-import { useSession } from "@/lib/auth-client";
-import { getClientDashboardState } from "@/lib/api/getClientDasboardState";
 
 export default function ClientDashboardOverview({statData}) {
   const stats = [
@@ -47,17 +44,6 @@ export default function ClientDashboardOverview({statData}) {
       name: "totalSpent",
     },
   ];
-//   const [statData, setStatData] = useState([]);
-//   const { data } = useSession();
-//   const user = data?.user;
-//   useEffect(() => {
-//     const fetchData = async () => {
-//       const result = await getClientDashboardState(user?.email);
-//       setStatData(result);
-//       console.log(result);
-//     };
-//     fetchData();
-//   }, [user]);
   return (
     <motion.div
       initial={{ opacity: 0, y: 10 }}

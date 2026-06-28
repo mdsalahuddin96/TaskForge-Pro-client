@@ -2,9 +2,13 @@ import DashboardHeader from "@/components/dashboard/DashboardHeader";
 import DashboardSidebar from "@/components/dashboard/DashboardSidebar";
 import { getUserSession, requiredRole } from "@/lib/core/session";
 import HamburgerContextProvider from "@/providers/HamburgerContextProvider";
-
+export const metadata = {
+  title: "Dashboard",
+  description: "Review and manage incoming tech contract proposals from verified network engineers.",
+};
 export default async function DashboardLayout({ children }) {
   const user=await getUserSession()
+  await requiredRole(user?.role)
   return (
     <HamburgerContextProvider>
       <div className="min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-800 dark:text-slate-100 flex">

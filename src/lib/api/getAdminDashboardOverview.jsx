@@ -1,4 +1,4 @@
-import { serverFetch } from "../core/server"
+import { protectedFetch, serverFetch } from "../core/server"
 export const getAdminDashboardOverview=async()=>{
-    return serverFetch(`/api/admin/overview`)
+    return protectedFetch(`/api/admin/overview`)
 }
