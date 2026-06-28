@@ -39,7 +39,7 @@ export function UserDropdown({ user }) {
               </Avatar.Fallback>
             </Avatar>
             <div>
-              <p className="text-[16px] leading-5 font-medium text-slate-700 dark:text-slate-200">
+              <p className="text-[16px] leading-5 font-medium text-slate-700 dark:text-slate-200 hidden md:block">
                 {user?.name}
               </p>
             </div>

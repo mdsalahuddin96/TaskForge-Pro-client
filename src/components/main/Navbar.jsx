@@ -93,7 +93,7 @@ const Navbar = () => {
           ) : (
             <>
             <Link href={"/login"} className="font-semibold text-slate-600 hover:text-indigo-600 dark:text-slate-300 dark:hover:text-indigo-400">Sign In</Link>
-              <Link href={"#"}>
+              <Link href={"#"} className="hidden md:block">
                 <Button className="sm:w-auto px-4 py-3 bg-gradient-to-r from-indigo-600 via-purple-600 to-violet-600 text-white font-bold rounded-md shadow-lg shadow-indigo-600/15 hover:from-indigo-700 hover:to-violet-700 hover:scale-105 transition duration-300 flex items-center justify-center gap-2">
                   Get Started
                 </Button>

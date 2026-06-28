@@ -116,7 +116,7 @@ export default function FeaturedTasks() {
           {tasks.map((task) => (
             <Link href={`/browse-tasks/${task?._id}`} key={task?._id}>
               <motion.div variants={cardVariants} className="h-full flex">
-                <Card className="bg-white dark:bg-zinc-950 border border-slate-200/70 dark:border-zinc-900 shadow-sm rounded-2xl h-full flex flex-col justify-between overflow-hidden group hover:scale-[1.03] hover:border-indigo-500/40 hover:shadow-xl hover:shadow-indigo-500/[0.03] dark:hover:shadow-indigo-500/[0.01] transition-all duration-300 ease-out relative">
+                <Card className="bg-white dark:bg-zinc-950 border border-slate-200/70 dark:border-zinc-900 shadow-sm rounded-2xl h-full w-full flex flex-col justify-between overflow-hidden group hover:scale-[1.03] hover:border-indigo-500/40 hover:shadow-xl hover:shadow-indigo-500/[0.03] dark:hover:shadow-indigo-500/[0.01] transition-all duration-300 ease-out relative">
                   {/* Visual Accent Top Line on Hover */}
                   <div className="absolute top-0 left-0 w-full h-[3px] bg-gradient-to-r from-indigo-500 to-purple-500 opacity-0 group-hover:opacity-100 transition-opacity" />
 
