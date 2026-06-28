@@ -2,10 +2,11 @@ import React from "react";
 import TaskFilter from "./TaskFilter";
 import TaskContainer from "./TaskContainer";
 import { getBrowseTask } from "@/lib/api/getBrowseTask";
+import { PaginationComponent } from "@/components/main/PaginationComponent";
 
 export default async function BrowseTasksPage({searchParams}) {
-  const{search,category,budget}=await searchParams
-  const tasks=await getBrowseTask(search, category, budget)
+  const{search,category,budget,page}=await searchParams
+  const {tasks,currentPage,totalPages,totalTasks}=await getBrowseTask(search, category, budget,page)
   return (
     <div className="min-h-screen bg-slate-50/50 dark:bg-slate-950 px-4 py-10 sm:px-6 lg:px-8">
       <div className="max-w-7xl mx-auto">
@@ -35,6 +36,7 @@ export default async function BrowseTasksPage({searchParams}) {
             <TaskContainer tasks={tasks} />
           </div>
         </div>
+        <PaginationComponent currentPage={currentPage} totalPages={totalPages} totalTasks={totalTasks}/>
       </div>
     </div>
   );

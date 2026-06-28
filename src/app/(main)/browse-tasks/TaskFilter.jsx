@@ -7,6 +7,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 export default function TaskFilter() {
   const router = useRouter();
   const searchParams = useSearchParams();
+  console.log("searchParams",searchParams)
   const [searchInp, setSearchInp] = useState(searchParams.get("search") || "");
   const [category, setCategory] = useState(searchParams.get("category") || "");
   const [budget, setBudget] = useState(searchParams.get("budget") || "");
@@ -41,7 +42,6 @@ export default function TaskFilter() {
   useEffect(() => {
     const timer = setTimeout(() => {
       const params = new URLSearchParams();
-
       if (searchInp) params.set("search", searchInp);
       if (category) params.set("category", category);
       if (budget) params.set("budget", budget);
