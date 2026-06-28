@@ -1,36 +1,225 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# 🚀 TaskForge Pro
 
-## Getting Started
+> A modern Freelance Marketplace Platform where Clients can post tasks, Freelancers can submit proposals, and Admins can manage the entire platform with secure role-based access.
 
-First, run the development server:
+![Next.js](https://img.shields.io/badge/Next.js-15-black?style=for-the-badge&logo=next.js)
+![React](https://img.shields.io/badge/React-19-61DAFB?style=for-the-badge&logo=react)
+![Express](https://img.shields.io/badge/Express.js-000000?style=for-the-badge&logo=express)
+![MongoDB](https://img.shields.io/badge/MongoDB-47A248?style=for-the-badge&logo=mongodb)
+![TailwindCSS](https://img.shields.io/badge/TailwindCSS-06B6D4?style=for-the-badge&logo=tailwindcss)
+![Stripe](https://img.shields.io/badge/Stripe-Payment-635BFF?style=for-the-badge&logo=stripe)
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+---
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## 🌐 Live Website
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+### 🔗 Client
+[TaskForge Pro Client](https://task-forge-pro-client.vercel.app/)
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### 🔗 Server
+[TaskForge Pro Sever](https://task-forge-pro-server.vercel.app/)
 
-## Learn More
+---
 
-To learn more about Next.js, take a look at the following resources:
+# 📖 Project Overview
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+TaskForge Pro is a complete freelance marketplace where clients can publish tasks, freelancers can submit proposals, and administrators manage the entire platform.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+The platform focuses on:
 
-## Deploy on Vercel
+- Secure Authentication
+- Role-Based Dashboard
+- Proposal Management
+- Payment System
+- Analytics Dashboard
+- Modern UI/UX
+- Responsive Design
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+---
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+# ✨ Main Features
+
+## 🔐 Authentication
+
+- Email & Password Login
+- Google Sign In
+- Better Auth Authentication
+- JWT Protected APIs
+- Secure Session Management
+- Role Based Authorization
+
+---
+
+## 👨‍💼 Client Features
+
+- Create New Tasks
+- Update Tasks
+- Delete Tasks
+- View Posted Tasks
+- Receive Freelancer Proposals
+- Accept Proposal
+- Reject Proposal
+- Secure Stripe Payment
+- Track Running Projects
+- Dashboard Overview
+
+---
+
+## 👨‍💻 Freelancer Features
+
+- Browse Available Tasks
+- Smart Search & Filtering
+- Submit Proposal
+- Proposal Tracking
+- Accepted Project List
+- Earnings Dashboard
+- Revenue Analytics
+- Running Projects
+- Profile Management
+
+---
+
+## 👑 Admin Features
+
+- Dashboard Analytics
+- Manage Users
+- Block / Unblock Users
+- View Platform Statistics
+- Category Analytics
+- Revenue Analytics
+- User Growth Chart
+- Task Monitoring
+
+---
+
+## 💳 Payment System
+
+Integrated with **Stripe Payment Gateway**
+
+Features:
+
+- Secure Checkout
+- Online Card Payment
+- Payment Verification
+- Payment History
+- Freelancer Earnings Tracking
+
+---
+
+## 📊 Dashboard Analytics
+
+### Freelancer Dashboard
+
+- Total Earnings
+- Total Proposals
+- Accepted Proposals
+- Pending Proposals
+- Running Projects
+- Last 3 Months Earnings Graph
+
+### Admin Dashboard
+
+- Total Users
+- Total Tasks
+- Active Tasks
+- Total Revenue
+- Task Categories Distribution
+- User Growth Analytics
+
+---
+
+## 🔎 Advanced Features
+
+- Debounced Search
+- Category Filter
+- Budget Filter
+- Server-side Pagination
+- Protected Routes
+- Dynamic Dashboard
+- Responsive Layout
+- Dark Mode Support
+
+---
+
+# 🛠 Tech Stack
+
+## Frontend
+
+- Next.js 15
+- React 19
+- Tailwind CSS
+- HeroUI
+- Framer Motion
+- Recharts
+- React Icons
+- React Hot Toast
+
+---
+
+## Backend
+
+- Express.js
+- MongoDB
+- Better Auth
+- JWT Authentication
+- Stripe Payment API
+
+---
+
+## Deployment
+
+- Vercel (Frontend)
+- Vercel (Backend)
+
+---
+
+
+# 📱 Responsive
+
+Fully Responsive
+
+- Desktop
+- Laptop
+- Tablet
+- Mobile
+
+---
+
+# 🔒 Security
+
+- JWT Verification
+- Better Auth Session
+- Protected API Routes
+- Role-Based Authorization
+- Blocked User Protection
+- Secure Payment Validation
+
+---
+
+# 📈 Future Improvements
+
+- Real-time Chat
+- Notifications
+- Email Verification
+- Password Reset
+- Milestone Payments
+- Review & Rating System
+- Freelancer Portfolio
+- Saved Tasks
+- Admin Activity Logs
+
+---
+
+# 👨‍💻 Developed By
+
+**Md. Salauddin**
+
+Computer Science & Engineering Graduate
+
+Passionate MERN Stack Developer
+
+---
+
+# ⭐ If you like this project
+
+Give this repository a ⭐ on GitHub.
