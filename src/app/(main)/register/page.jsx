@@ -16,6 +16,7 @@ import { FormSubmitBtn } from "@/components/main/FormSubmitBtn";
 import { authClient } from "@/lib/auth-client";
 import toast from "react-hot-toast";
 import Link from "next/link";
+import { redirectTo } from "@/lib/actions/redirectTo";
 
 export default function RegisterPage() {
   const [isVisible, setIsVisible] = useState(false);
@@ -26,7 +27,7 @@ export default function RegisterPage() {
   const handleFormSubmit = async (formData) => {
     const userData = Object.fromEntries(formData.entries());
     userData.role = selectedRole;
-    userData.isBlocked = false;
+    // userData.isBlocked = false;
     //  convert skills to Array
     if (selectedRole === "Freelancer" && userData.skills) {
       userData.skills = userData.skills
@@ -39,7 +40,7 @@ export default function RegisterPage() {
 
     const { data, error } = await authClient.signUp.email(userData);
     if (data) {
-      console.log(data);
+      redirectTo("/login")
       toast.success("Registered Successfully!");
     }
     if (error) {
