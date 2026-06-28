@@ -40,8 +40,8 @@ export function PaginationComponent({currentPage,totalPages, totalTasks}) {
     router.push(`${pathName}?${params.toString()}`)
   },[page])
   return (
-    <div className="w-full max-w-2xs overflow-x-auto sm:max-w-full">
-      <Pagination className="justify-center" >
+    <div className="w-full mt-5 max-w-2xs overflow-x-auto sm:max-w-full">
+      <Pagination className="justify-end" >
         <Pagination.Content >
           <Pagination.Item>
             <Pagination.Previous isDisabled={page === 1} onPress={() => setPage((p) => p - 1)}>
