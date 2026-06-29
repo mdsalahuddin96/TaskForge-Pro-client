@@ -3,17 +3,14 @@
 import React, { useState, useEffect } from "react";
 import { Table, Spinner, Button, Avatar } from "@heroui/react";
 import { FiShieldOff, FiShield, FiUsers } from "react-icons/fi";
-import Image from "next/image";
-import { updateUser } from "../../../../lib/api/updateUser";
-import toast from "react-hot-toast";
 import { getAllUsers } from "@/lib/api/getAllUsers";
+import { blockUser } from "@/lib/api/blockUser";
 
 export default function ManageUsers() {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [actionLoadingId, setActionLoadingId] = useState(null); // স্পেসিফিক বাটনে স্পিনার দেখানোর জন্য
+  const [actionLoadingId, setActionLoadingId] = useState(null); // loading spinner for specific button
 
-  // ১. ডামি ডেটা ফেচিং বা এপিআই কল স্ট্রাকচার
   useEffect(() => {
     const fetchAllAccounts = async () => {
       try {
@@ -23,28 +20,6 @@ export default function ManageUsers() {
         }
       } catch (error) {
         console.error("Failed to load platform accounts:", error);
-
-        // এপিআই রেডি না থাকলে টেস্ট করার জন্য ডামি ডাটা সেট করে রাখতে পারেন
-        // setUsers([
-        //   {
-        //     _id: "1",
-        //     name: "Salah uddin",
-        //     email: "salauddin@gmail.com",
-        //     image:
-        //       "https://images.unsplash.com/photo-1605568427561-40dd23c2acea",
-        //     role: "Client",
-        //     isBlocked: false,
-        //   },
-        //   {
-        //     _id: "2",
-        //     name: "John Doe",
-        //     email: "john@freelancer.com",
-        //     image:
-        //       "https://images.unsplash.com/photo-1534528741775-53994a69daeb",
-        //     role: "Freelancer",
-        //     isBlocked: true,
-        //   },
-        // ]);
       } finally {
         setLoading(false);
       }
@@ -56,10 +31,9 @@ export default function ManageUsers() {
   const handleToggleBlock = async (userId, currentBlockStatus) => {
     setActionLoadingId(userId);
     try {
-      const result = await updateUser(userId, {
+      const result = await blockUser(userId, {
         isBlocked: !currentBlockStatus,
       });
-      console.log("currentBlockStatus", currentBlockStatus);
       if (result.modifiedCount > 0) {
         setUsers((prevUsers) =>
           prevUsers.map((user) =>

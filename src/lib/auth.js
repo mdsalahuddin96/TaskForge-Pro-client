@@ -52,4 +52,17 @@ export const auth = betterAuth({
       },
     },
   },
+  hooks: {
+    session: {
+      create: {
+        before: async ({ user }) => {
+          if (user.isBlocked) {
+            throw new Error("Your account has been blocked.");
+          }
+
+          return { user };
+        },
+      },
+    },
+  },
 });

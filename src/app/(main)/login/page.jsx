@@ -14,7 +14,8 @@ import toast from "react-hot-toast";
 import Link from "next/link";
 import { FormSubmitBtn } from "@/components/main/FormSubmitBtn";
 import { FcGoogle } from "react-icons/fc";
-import { authClient } from "@/lib/auth-client";
+import { authClient, signOut } from "@/lib/auth-client";
+import { redirectTo } from "@/lib/actions/redirectTo";
 
 export default function LoginPage() {
   const [isVisible, setIsVisible] = useState(false);
@@ -43,6 +44,14 @@ export default function LoginPage() {
       const { data, error } = await authClient.signIn.email(loginData);
       if (data) {
         const role = data?.user?.role;
+        if (data?.user?.isBlocked) {
+          await signOut();
+          toast.error(
+            "Your account has been blocked by the admin. Please contact support.",
+          );
+          redirectTo("/login")
+          return;
+        }
         toast.success("Logged in successfully!");
         handleRoleRedirect(role);
       }
