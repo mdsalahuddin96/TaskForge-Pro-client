@@ -585,7 +585,7 @@ export default function TaskDetailsManagementClient({ taskData }) {
                     Expertise / Skills
                   </span>
                   <div className="flex flex-wrap gap-1.5">
-                    {profile?.skills.map((skill, i) => (
+                    {(profile?.skills||[]).map((skill, i) => (
                       <span
                         key={i}
                         className="text-[11px] font-extrabold px-2.5 py-1 bg-indigo-50 dark:bg-indigo-950/40 text-indigo-600 dark:text-indigo-400 rounded-md border border-indigo-100/10"

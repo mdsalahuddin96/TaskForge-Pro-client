@@ -165,7 +165,7 @@ const DashboardSidebar = ({ user }) => {
                 {user?.name ? user.name.slice(0, 2).toUpperCase() : "JD"}
               </Avatar.Fallback>
             </Avatar>
-            <div className="hidden md:flex flex-col text-left">
+            <div className=" flex flex-col text-left">
               <span className="text-xs font-bold leading-tight">
                 {user?.name}
               </span>

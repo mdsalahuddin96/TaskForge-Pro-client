@@ -64,12 +64,12 @@ export default function EarningGraph({ chartData = [] }) {
 
       {/* Header */}
 
-      <div className="flex items-center justify-between px-6 py-5 border-b border-slate-200 dark:border-zinc-900">
+      <div className="flex items-center justify-between px-3 md:px-6 py-5 border-b border-slate-200 dark:border-zinc-900">
 
         <div className="flex items-center gap-3">
 
-          <div className="w-11 h-11 rounded-2xl bg-indigo-500/10 flex items-center justify-center">
-            <FiTrendingUp className="text-indigo-500 text-xl" />
+          <div className="w-8 h-8 md:w-11 md:h-11 rounded-2xl bg-indigo-500/10 flex items-center justify-center">
+            <FiTrendingUp className="text-indigo-500 text-sm md:text-xl" />
           </div>
 
           <div>

@@ -53,78 +53,130 @@ export default function EarningsClientPage({ initialData, totalEarnings }) {
           </Card>
         </motion.div>
       </div>
+      {/* Mobile Card View */}
+      <div className="md:hidden space-y-4">
+        {initialData.length > 0 ? (
+          initialData.map((row) => (
+            <Card
+              key={row._id}
+              className="bg-white dark:bg-slate-900 border border-slate-200/60 dark:border-slate-800 rounded-2xl p-4 shadow-sm"
+            >
+              <div className="space-y-3">
+                <div>
+                  <h3 className="font-bold text-slate-900 dark:text-white">
+                    {row.taskTitle}
+                  </h3>
 
-      {/* Table Structure */}
-      <motion.div
-        initial={{ opacity: 0, y: 15 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.4 }}
-        className="w-full"
-      >
-        <Table className="w-full" shadow="none">
-          <Table.ScrollContainer className="bg-white dark:bg-slate-900 border border-slate-200/60 dark:border-slate-800/60 rounded-2xl shadow-sm overflow-hidden">
-            <Table.Content aria-label="Freelancer Earnings Ledger Table">
-              <Table.Header className="bg-slate-50 dark:bg-slate-950/50 border-b border-slate-100 dark:border-slate-800">
-                <Table.Column
-                  isRowHeader
-                  className="text-xs font-black text-slate-400 uppercase py-4 pl-6 text-left"
-                >
-                  Task Title
-                </Table.Column>
-                <Table.Column className="text-xs font-black text-slate-400 uppercase py-4 text-left">
-                  Client Name
-                </Table.Column>
-                <Table.Column className="text-xs font-black text-slate-400 uppercase py-4 text-left">
-                  Amount Made
-                </Table.Column>
-                <Table.Column className="text-xs font-black text-slate-400 uppercase py-4 pr-6 text-right">
-                  Completion Date
-                </Table.Column>
-              </Table.Header>
+                  <p className="text-[11px] text-slate-400 mt-1">
+                    TXID: {row.transaction_id}
+                  </p>
+                </div>
 
-              <Table.Body className="divide-y divide-slate-100 dark:divide-slate-800/50">
-                {initialData.map((row) => (
-                  <Table.Row
-                    key={row._id}
-                    className="hover:bg-slate-50/70 dark:hover:bg-slate-950/40 transition-colors group cursor-default"
-                  >
-                    <Table.Cell className="py-4 pl-6 text-sm font-black tracking-tight text-slate-800 dark:text-white group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors text-left">
-                      {row?.taskTitle}
-                      <span className="block text-[9px] font-bold text-slate-400 uppercase font-mono mt-0.5 tracking-normal">
-                        TXID: {row?.transaction_id}
-                      </span>
-                    </Table.Cell>
+                <div className="grid grid-cols-2 gap-3 text-sm">
+                  <div>
+                    <p className="text-slate-400 text-xs uppercase">Client</p>
+                    <p className="font-semibold">{row.clientName}</p>
+                  </div>
 
-                    <Table.Cell className="py-4 text-xs font-bold text-slate-600 dark:text-slate-300 text-left">
-                      {row?.clientName}
-                    </Table.Cell>
+                  <div>
+                    <p className="text-slate-400 text-xs uppercase">Amount</p>
 
-                    <Table.Cell className="py-4 text-left">
-                      <span className="inline-flex items-center gap-0.5 text-sm font-black text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/30 px-2.5 py-1 rounded-lg border border-emerald-100/20">
-                        <FiDollarSign className="w-3.5 h-3.5" />
-                        {row?.amount}
-                      </span>
-                    </Table.Cell>
+                    <span className="inline-flex items-center gap-1 mt-1 bg-emerald-50 dark:bg-emerald-950/30 text-emerald-600 dark:text-emerald-400 px-2 py-1 rounded-lg font-bold">
+                      <FiDollarSign className="w-3 h-3" />
+                      {row.amount}
+                    </span>
+                  </div>
+                </div>
 
-                    <Table.Cell className="py-4 pr-6 text-xs font-extrabold text-slate-400 dark:text-slate-500 text-right">
-                      {formatDate(row?.payedAt)}
-                    </Table.Cell>
-                  </Table.Row>
-                ))}
-              </Table.Body>
-            </Table.Content>
-          </Table.ScrollContainer>
-        </Table>
+                <div>
+                  <p className="text-slate-400 text-xs uppercase">
+                    Completed On
+                  </p>
 
-        {/* Empty state conditional view handler */}
-        {initialData.length === 0 && (
-          <div className="text-center py-20 border border-dashed border-slate-100 dark:border-slate-800 rounded-2xl bg-white dark:bg-slate-900 w-full mt-4">
-            <p className="text-xs font-bold text-slate-400 uppercase tracking-wider">
-              No earnings recorded yet.
-            </p>
+                  <p className="font-medium">{formatDate(row.payedAt)}</p>
+                </div>
+              </div>
+            </Card>
+          ))
+        ) : (
+          <div className="text-center py-12">
+            <p className="text-xs text-slate-400">No earnings recorded yet.</p>
           </div>
         )}
-      </motion.div>
+      </div>
+      {/* Table Structure */}
+      <div className="overflow-x-auto">
+        <motion.div
+          initial={{ opacity: 0, y: 15 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.4 }}
+          className="hidden md:block w-full"
+        >
+          <Table className="w-full" shadow="none">
+            <Table.ScrollContainer className="bg-white dark:bg-slate-900 border border-slate-200/60 dark:border-slate-800/60 rounded-2xl shadow-sm overflow-hidden">
+              <Table.Content aria-label="Freelancer Earnings Ledger Table">
+                <Table.Header className="bg-slate-50 dark:bg-slate-950/50 border-b border-slate-100 dark:border-slate-800">
+                  <Table.Column
+                    isRowHeader
+                    className="text-xs font-black text-slate-400 uppercase py-4 pl-6 text-left"
+                  >
+                    Task Title
+                  </Table.Column>
+                  <Table.Column className="text-xs font-black text-slate-400 uppercase py-4 text-left">
+                    Client Name
+                  </Table.Column>
+                  <Table.Column className="text-xs font-black text-slate-400 uppercase py-4 text-left">
+                    Amount Made
+                  </Table.Column>
+                  <Table.Column className="text-xs font-black text-slate-400 uppercase py-4 pr-6 text-right">
+                    Completion Date
+                  </Table.Column>
+                </Table.Header>
+
+                <Table.Body className="divide-y divide-slate-100 dark:divide-slate-800/50">
+                  {initialData.map((row) => (
+                    <Table.Row
+                      key={row._id}
+                      className="hover:bg-slate-50/70 dark:hover:bg-slate-950/40 transition-colors group cursor-default"
+                    >
+                      <Table.Cell className="py-4 pl-6 text-sm font-black tracking-tight text-slate-800 dark:text-white group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors text-left">
+                        {row?.taskTitle}
+                        <span className="block text-[9px] font-bold text-slate-400 uppercase font-mono mt-0.5 tracking-normal">
+                          TXID: {row?.transaction_id}
+                        </span>
+                      </Table.Cell>
+
+                      <Table.Cell className="py-4 text-xs font-bold text-slate-600 dark:text-slate-300 text-left">
+                        {row?.clientName}
+                      </Table.Cell>
+
+                      <Table.Cell className="py-4 text-left">
+                        <span className="inline-flex items-center gap-0.5 text-sm font-black text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/30 px-2.5 py-1 rounded-lg border border-emerald-100/20">
+                          <FiDollarSign className="w-3.5 h-3.5" />
+                          {row?.amount}
+                        </span>
+                      </Table.Cell>
+
+                      <Table.Cell className="py-4 pr-6 text-xs font-extrabold text-slate-400 dark:text-slate-500 text-right">
+                        {formatDate(row?.payedAt)}
+                      </Table.Cell>
+                    </Table.Row>
+                  ))}
+                </Table.Body>
+              </Table.Content>
+            </Table.ScrollContainer>
+          </Table>
+
+          {/* Empty state conditional view handler */}
+          {initialData.length === 0 && (
+            <div className="text-center py-20 border border-dashed border-slate-100 dark:border-slate-800 rounded-2xl bg-white dark:bg-slate-900 w-full mt-4">
+              <p className="text-xs font-bold text-slate-400 uppercase tracking-wider">
+                No earnings recorded yet.
+              </p>
+            </div>
+          )}
+        </motion.div>
+      </div>
     </div>
   );
 }

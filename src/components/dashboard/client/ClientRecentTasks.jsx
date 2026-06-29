@@ -43,13 +43,13 @@ export default function ClientRecentTasks() {
             <table className="w-full text-left border-collapse">
               <thead>
                 <tr className="border-b border-slate-200/60 dark:border-slate-800/60 bg-slate-50/50 dark:bg-slate-950/20">
-                  <th className="p-4 text-[10px] font-black text-slate-400 uppercase tracking-wider">
+                  <th className="p-4 text-[10px] font-black text-slate-400 uppercase tracking-wider w-[50%]">
                     Task Title
                   </th>
-                  <th className="p-4 text-[10px] font-black text-slate-400 uppercase tracking-wider">
+                  <th className="p-4 text-[10px] font-black text-slate-400 uppercase tracking-wider w-[25%]">
                     Budget
                   </th>
-                  <th className="p-4 text-[10px] font-black text-slate-400 uppercase tracking-wider text-right">
+                  <th className="p-4 text-[10px] font-black text-slate-400 uppercase tracking-wider w-[25%] text-right">
                     Status
                   </th>
                 </tr>
@@ -60,11 +60,11 @@ export default function ClientRecentTasks() {
                     key={task?._id}
                     className="hover:bg-slate-50/30 dark:hover:bg-slate-950/10 transition-colors"
                   >
-                    <td className="p-4 font-bold text-slate-800 dark:text-slate-200 truncate">
+                    <td className="p-4 font-bold text-slate-800 dark:text-slate-200 max-w-0 truncate">
                       {task?.title}
                     </td>
                     <td className="p-4 font-black text-slate-900 dark:text-white">
-                      {task?.budget}
+                      ${task?.budget}
                     </td>
                     <td className="p-4 text-right">
                       <span
